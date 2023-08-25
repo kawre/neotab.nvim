@@ -7,8 +7,11 @@ local defaults = {
 	default_to_tab = true, -- defaults to tab if tabout action is not available
 	completion = true,
 	tabbable = {
+		"(",
 		")",
+		"[",
 		"]",
+		"{",
 		"}",
 		"'",
 		"`",

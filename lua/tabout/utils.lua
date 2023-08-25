@@ -31,6 +31,12 @@ M.move_cursor = function(x, y)
 	api.nvim_win_set_cursor(0, { line, col })
 end
 
+---@param command string
+---@param fn_string string
+M.register_command = function(command, fn_string)
+	api.nvim_command("command! " .. command .. " " .. fn_string)
+end
+
 ---@param str string
 M.replace = function(str)
 	return api.nvim_replace_termcodes(str, true, true, true)

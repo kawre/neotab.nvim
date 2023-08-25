@@ -24,7 +24,11 @@ M.setup = function(options)
 
 	config.setup(options)
 
-	api.nvim_set_keymap("i", config.options.tabkey, "<cmd>lua require('tabout').tabout()<CR>", { silent = true })
+	api.nvim_create_user_command("Tabout", function()
+		require("tabout").tabout()
+	end, {})
+
+	api.nvim_set_keymap("i", config.options.tabkey, "<cmd>Tabout<cr>", { silent = true })
 end
 
 M.disable = function()
