@@ -1,5 +1,5 @@
 # nvim-tabout
-Convenient Neovim plugin for tabbing in and out of brackets, parentheses, quotes, and more.
+Simple yet convenient Neovim plugin for tabbing in and out of brackets, parentheses, quotes, and more.
 
 ## 💡 Expected behaviour
 | Before | Key | After | Setting |
@@ -15,7 +15,6 @@ Convenient Neovim plugin for tabbing in and out of brackets, parentheses, quotes
 ```lua
 return {
     "kawre/nvim-tabout",
-    cmd = "Tabout",
     opts = {},
 }
 ```

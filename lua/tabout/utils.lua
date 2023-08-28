@@ -1,6 +1,7 @@
 local api = vim.api
 local config = require("tabout.config")
 
+---@class Utils
 local M = {}
 
 ---@param x number
@@ -18,7 +19,7 @@ M.can_tabout = function()
 	end
 
 	local next_char = M.get_adj_char(1)
-	return vim.tbl_contains(config.options.tabbable, next_char)
+	return vim.tbl_contains(config.tabbable, next_char)
 end
 
 ---@param x number
@@ -29,12 +30,6 @@ M.move_cursor = function(x, y)
 	local col = pos[2] + x
 
 	api.nvim_win_set_cursor(0, { line, col })
-end
-
----@param command string
----@param fn_string string
-M.register_command = function(command, fn_string)
-	api.nvim_command("command! " .. command .. " " .. fn_string)
 end
 
 ---@param str string
