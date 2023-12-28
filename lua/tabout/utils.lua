@@ -1,40 +1,111 @@
 local api = vim.api
 local config = require("tabout.config")
+local ts_utils = require("nvim-treesitter.ts_utils")
+local log = require("tabout.logger")
 
----@class Utils
-local M = {}
+---@class Tabout.Utils
+local Utils = {}
 
----@param x number
-M.get_adj_char = function(x)
-	local col = api.nvim_win_get_cursor(0)[2] + x
-	local line = api.nvim_get_current_line()
+---@param x integer
+---@return string|nil
+function Utils.adj_char(x)
+    local col = (api.nvim_win_get_cursor(0)[2] + 1) + x
+    local line = api.nvim_get_current_line()
+    return line:sub(col, col)
+end
 
-	return line:sub(col, col)
+function Utils.get_info(char)
+    if not char then
+        return
+    end
+
+    local res = vim.tbl_filter(function(o)
+        return o.close == char or o.open == char
+    end, config.tabbable)
+
+    return not vim.tbl_isempty(res) and res[1] or nil
+end
+
+function Utils.find_closing(info, line, col)
+    local o, c = 1, 0
+
+    for i = col + 1, #line do
+        local char = line:sub(i, i)
+
+        if info.open == char then
+            o = o + 1
+        elseif info.close == char then
+            c = c + 1
+        end
+
+        if o == c then
+            return i
+        end
+    end
+end
+
+---comment
+---@param info Tabout.set
+---@param line string
+---@param col integer
+function Utils.find_next_pos(info, line, col) --
+    local idx = Utils.find_closing(info, line, col)
+        or line:find(info.close, col + 1, true)
+        or line:find(info.open, col + 1, true)
+
+    if not idx then
+        for i = col + 1, #line do
+            if Utils.get_info(line:sub(i, i)) then
+                return i - col - 1
+            end
+        end
+    else
+        return idx - col - 1
+    end
 end
 
 ---@return boolean
-M.can_tabout = function()
-	if vim.tbl_contains(config.options.exclude, vim.bo.filetype) then
-		return false
-	end
+function Utils.can_tabout()
+    if vim.tbl_contains(config.user.exclude, vim.bo.filetype) then
+        return false
+    end
 
-	local next_char = M.get_adj_char(1)
-	return vim.tbl_contains(config.tabbable, next_char)
+    local line = api.nvim_get_current_line()
+    local pos = api.nvim_win_get_cursor(0)
+
+    local before_cursor = line:sub(0, pos[2])
+
+    if vim.trim(before_cursor) == "" then --
+        return false
+    end
+
+    return true
 end
 
 ---@param x number
 ---@param y number
-M.move_cursor = function(x, y)
-	local pos = api.nvim_win_get_cursor(0)
-	local line = pos[1] + y
-	local col = pos[2] + x
+function Utils.move_cursor(x, y)
+    local pos = api.nvim_win_get_cursor(0)
 
-	api.nvim_win_set_cursor(0, { line, col })
+    local line = pos[1] + (y or 0)
+    local col = pos[2] + (x or 0)
+
+    api.nvim_win_set_cursor(0, { line, col })
 end
 
 ---@param str string
-M.replace = function(str)
-	return api.nvim_replace_termcodes(str, true, true, true)
+function Utils.replace(str)
+    return api.nvim_replace_termcodes(str, true, true, true)
 end
 
-return M
+function Utils.map(mode, lhs, rhs, opts)
+    local options = { noremap = true }
+
+    if opts then
+        options = vim.tbl_extend("force", options, opts)
+    end
+
+    api.nvim_set_keymap(mode, lhs, rhs, options)
+end
+
+return Utils
