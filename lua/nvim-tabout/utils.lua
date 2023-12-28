@@ -1,7 +1,7 @@
 local api = vim.api
-local config = require("tabout.config")
+local config = require("nvim-tabout.config")
 local ts_utils = require("nvim-treesitter.ts_utils")
-local log = require("tabout.logger")
+local log = require("nvim-tabout.logger")
 
 ---@class Tabout.Utils
 local Utils = {}
@@ -27,6 +27,10 @@ function Utils.get_info(char)
 end
 
 function Utils.find_closing(info, line, col)
+    if info.open == info.close then
+        return
+    end
+
     local o, c = 1, 0
 
     for i = col + 1, #line do

@@ -1,10 +1,9 @@
 local api = vim.api
 
-local config = require("tabout.config")
-local log = require("tabout.logger")
-local utils = require("tabout.utils")
+local config = require("nvim-tabout.config")
+local utils = require("nvim-tabout.utils")
 
----@class tab.Tabout
+---@class Nvim.Tabout
 local Tabout = {}
 
 local enabled = true
@@ -52,11 +51,11 @@ function Tabout.tabout()
     Tabout.fallback()
 end
 
----@param options TaboutOptions
+---@param options Tabout.Config
 Tabout.setup = function(options)
     config.setup(options)
 
-    utils.map("i", "<Plug>(Tabout)", "<Cmd>lua require(\"tabout\").tabout()<CR>")
+    utils.map("i", "<Plug>(Tabout)", "<Cmd>lua require(\"nvim-tabout\").tabout()<CR>")
 
     if config.user.tabkey and config.user.tabkey ~= "" then
         api.nvim_set_keymap(
