@@ -25,22 +25,44 @@ function Utils.get_info(char)
     return not vim.tbl_isempty(res) and res[1] or nil
 end
 
----comment
+function Utils.find_closing(info, line, col)
+    if info.open == info.close then
+        return
+    end
+
+    local o, c = 1, 0
+
+    for i = col + 1, #line do
+        local char = line:sub(i, i)
+
+        if info.open == char then
+            o = o + 1
+        elseif info.close == char then
+            c = c + 1
+        end
+
+        if o == c then
+            return i
+        end
+    end
+end
+
 ---@param info Tabout.set
 ---@param line string
 ---@param col integer
 function Utils.find_next(info, line, col) --
-    local idx = line:find(info.open, col + 1, true) or line:find(info.close, col + 1, true)
+    local idx = line:find(info.open, col + 1, true) --
+        or line:find(info.close, col + 1, true)
 
-    if not idx then
-        for i = col + 1, #line do
-            if Utils.get_info(line:sub(i, i)) then
-                return math.max(1, i - col - 1)
-            end
+    -- if not idx then
+    for i = col + 1, #line do
+        if Utils.get_info(line:sub(i, i)) then
+            return math.max(1, i - col - 1)
         end
-    else
-        return math.max(1, idx - col - 1)
     end
+    -- else
+    --     return math.max(1, idx - col - 1)
+    -- end
 end
 
 ---@param x integer

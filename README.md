@@ -1,7 +1,9 @@
 # nvim-tabout
+
 Simple yet convenient Neovim plugin for tabbing in and out of brackets, parentheses, quotes, and more.
 
 ## 💡 Expected behaviour
+
 | Before | Key | After | Setting |
 | --- | --- | --- | --- |
 | `{\|}` | `<Tab>` | `{}\| ` | - |
@@ -9,12 +11,16 @@ Simple yet convenient Neovim plugin for tabbing in and out of brackets, parenthe
 | `"str\|ing"` | `<Tab>` | `"str  \|ing"` | - |
 | `"str\|ing"` | `<Tab>` | `"str\|ing"` | `default_to_tab = false` |
 | `fn foo(bar\|) {}` | `<Tab>` | `fn foo(bar)\| {}` | - |
+| `{\|foo}` | `<Tab>` | `{foo\|}` | - |
 
 ## 💾 installation
+
 ### [lazy](https://github.com/folke/lazy.nvim)
+
 ```lua
 return {
     "kawre/nvim-tabout",
+    event = { "InsertEnter" },
     opts = {},
 }
 ```
