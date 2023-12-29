@@ -5,7 +5,7 @@ local M = {}
 ---@class Tabout.Config
 local defaults = {
     tabkey = "<Tab>",
-    default_to_tab = true, -- defaults to tab if tabout action is not available
+    act_as_tab = true, -- defaults to tab if tabout action is not available
     debug = false,
     tabbable = { ---@type Tabout.set
         { open = "(", close = ")" },
@@ -22,12 +22,12 @@ local defaults = {
 ---@type Tabout.Config
 M.user = {}
 M.tabbable = {}
-M.debug = true
+M.debug = false
 M.name = "nvim-tabout"
 
 M.setup = function(options)
-    M.user = vim.tbl_deep_extend("force", {}, defaults, options or {})
-
+    M.user = vim.tbl_deep_extend("force", defaults, options or {})
+    M.debug = M.user.debug
     M.tabbable = M.user.tabbable
 end
 

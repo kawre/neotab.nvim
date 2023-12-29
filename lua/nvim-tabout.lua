@@ -1,6 +1,7 @@
 local api = vim.api
 
 local config = require("nvim-tabout.config")
+local log = require("nvim-tabout.logger")
 local utils = require("nvim-tabout.utils")
 
 ---@class Nvim.Tabout
@@ -13,7 +14,7 @@ Tabout.toggle = function()
 end
 
 function Tabout.fallback()
-    if config.user.default_to_tab then
+    if config.user.act_as_tab then
         api.nvim_feedkeys(utils.replace("<Tab>"), "n", false)
     end
 end
@@ -31,39 +32,32 @@ function Tabout.tabout()
         return Tabout.fallback()
     end
 
-    local curr_char = utils.adj_char(0)
-    local curr_info = utils.get_info(curr_char)
-
-    if curr_info then
-        return utils.move_cursor(1, 0)
-    end
-
-    local prev_char = utils.adj_char(-1)
-    local prev_info = utils.get_info(prev_char)
+    local prev_info = utils.get_info(utils.adj_char(-1))
 
     if prev_info then
-        local offset = utils.find_next_pos(prev_info, line, pos[2])
+        local offset = utils.find_next(prev_info, line, pos[2])
         if offset then
             return utils.move_cursor(offset, 0)
         end
     end
 
-    Tabout.fallback()
+    local curr_info = utils.get_info(utils.adj_char(0))
+
+    if curr_info then
+        utils.move_cursor(1, 0)
+    else
+        Tabout.fallback()
+    end
 end
 
----@param options Tabout.Config
+---@param options ntab
 Tabout.setup = function(options)
     config.setup(options)
 
     utils.map("i", "<Plug>(Tabout)", "<Cmd>lua require(\"nvim-tabout\").tabout()<CR>")
 
-    if config.user.tabkey and config.user.tabkey ~= "" then
-        api.nvim_set_keymap(
-            "i",
-            config.user.tabkey,
-            "<Plug>(Tabout)",
-            { silent = true, expr = true }
-        )
+    if config.user.tabkey ~= "" then
+        api.nvim_set_keymap("i", config.user.tabkey, "<Plug>(Tabout)", { silent = true })
     end
 end
 

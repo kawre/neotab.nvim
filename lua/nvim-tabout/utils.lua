@@ -1,6 +1,5 @@
 local api = vim.api
 local config = require("nvim-tabout.config")
-local ts_utils = require("nvim-treesitter.ts_utils")
 local log = require("nvim-tabout.logger")
 
 ---@class Tabout.Utils
@@ -26,68 +25,26 @@ function Utils.get_info(char)
     return not vim.tbl_isempty(res) and res[1] or nil
 end
 
-function Utils.find_closing(info, line, col)
-    if info.open == info.close then
-        return
-    end
-
-    local o, c = 1, 0
-
-    for i = col + 1, #line do
-        local char = line:sub(i, i)
-
-        if info.open == char then
-            o = o + 1
-        elseif info.close == char then
-            c = c + 1
-        end
-
-        if o == c then
-            return i
-        end
-    end
-end
-
 ---comment
 ---@param info Tabout.set
 ---@param line string
 ---@param col integer
-function Utils.find_next_pos(info, line, col) --
-    local idx = Utils.find_closing(info, line, col)
-        or line:find(info.close, col + 1, true)
-        or line:find(info.open, col + 1, true)
+function Utils.find_next(info, line, col) --
+    local idx = line:find(info.open, col + 1, true) or line:find(info.close, col + 1, true)
 
     if not idx then
         for i = col + 1, #line do
             if Utils.get_info(line:sub(i, i)) then
-                return i - col - 1
+                return math.max(1, i - col - 1)
             end
         end
     else
-        return idx - col - 1
+        return math.max(1, idx - col - 1)
     end
 end
 
----@return boolean
-function Utils.can_tabout()
-    if vim.tbl_contains(config.user.exclude, vim.bo.filetype) then
-        return false
-    end
-
-    local line = api.nvim_get_current_line()
-    local pos = api.nvim_win_get_cursor(0)
-
-    local before_cursor = line:sub(0, pos[2])
-
-    if vim.trim(before_cursor) == "" then --
-        return false
-    end
-
-    return true
-end
-
----@param x number
----@param y number
+---@param x integer
+---@param y integer
 function Utils.move_cursor(x, y)
     local pos = api.nvim_win_get_cursor(0)
 
