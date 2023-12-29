@@ -33,6 +33,7 @@ end
 
 function utils.find_closing(info, line, col)
     if info.open == info.close then
+        log.info(info)
         return line:find(info.close, col + 1, true)
     end
 
@@ -115,12 +116,15 @@ end
 function utils.find_next_closing(info, line, col) --
     local char = line:sub(col, col)
 
-    if info.close == char then
-        return utils.find_next_nested(info, line, col)
-    else
-        return utils.find_closing(info, line, col) --
+    local i
+    if info.open == info.close then
+        i = line:find(info.close, col + 1, true) --
+    elseif info.close ~= char then
+        i = utils.find_closing(info, line, col) --
             or line:find(info.close, col + 1, true)
     end
+
+    return i or utils.find_next_nested(info, line, col)
 end
 
 ---@param info ntab.pair
