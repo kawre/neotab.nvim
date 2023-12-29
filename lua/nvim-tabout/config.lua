@@ -20,6 +20,19 @@ local defaults = {
         { open = "<", close = ">" },
     },
     exclude = {},
+    smart_punctuators = {
+        enabled = false,
+
+        semicolon = {
+            enabled = false,
+            ft = { "java", "js", "dart" },
+        },
+
+        comma = {
+            enabled = false,
+            triggers = { "\"", "'" },
+        },
+    },
 }
 
 ---@type ntab.user.config

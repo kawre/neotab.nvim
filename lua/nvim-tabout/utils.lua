@@ -6,9 +6,11 @@ local log = require("nvim-tabout.logger")
 local utils = {}
 
 ---@param x integer
+---@param pos? integer[]
 ---@return string|nil
-function utils.adj_char(x)
-    local col = (api.nvim_win_get_cursor(0)[2] + 1) + x
+function utils.adj_char(x, pos)
+    pos = pos or api.nvim_win_get_cursor(0)
+    local col = pos[2] + x + 1
     local line = api.nvim_get_current_line()
     return line:sub(col, col)
 end
@@ -31,9 +33,29 @@ function utils.get_info(char)
     return not vim.tbl_isempty(res) and res[1] or nil
 end
 
+function utils.find_opening(info, line, col)
+    if info.open == info.close then
+        return line:reverse():find(info.open, 1, true)
+    end
+
+    local c = 1
+    for i = col, 1, -1 do
+        local char = line:sub(i, i)
+
+        if info.open == char then
+            c = c - 1
+        elseif info.close == char then
+            c = c + 1
+        end
+
+        if c == 0 then
+            return i
+        end
+    end
+end
+
 function utils.find_closing(info, line, col)
     if info.open == info.close then
-        log.info(info)
         return line:find(info.close, col + 1, true)
     end
 
@@ -88,7 +110,7 @@ function utils.find_next_nested(info, line, col) --
             local char_info = utils.get_info(char)
 
             if char_info then
-                return i
+                return i, i
             end
         end
     else
@@ -101,12 +123,12 @@ function utils.find_next_nested(info, line, col) --
 
             if char_info and char == char_info.open then
                 if utils.valid_pair(char_info, line, i + 1, r) then
-                    return i
+                    return i, i + 1
                 end
             end
         end
 
-        return closing_idx
+        return closing_idx, closing_idx
     end
 end
 
@@ -130,27 +152,32 @@ end
 ---@param info ntab.pair
 ---@param line string
 ---@param col integer
+---
+---@return integer|nil, string|nil
 function utils.find_next(info, line, col) --
-    local i
+    local i, char
 
     if config.user.behavior == "closing" then
-        i = utils.find_next_closing(info, line, col)
+        i, char = utils.find_next_closing(info, line, col)
     else
-        i = utils.find_next_nested(info, line, col)
+        i, char = utils.find_next_nested(info, line, col)
     end
 
-    return i and math.max(1, i - col - 1)
+    return i and math.max(1, i - col - 1), char and line:sub(char, char)
 end
 
 ---@param x integer
----@param y integer
-function utils.move_cursor(x, y)
-    local pos = api.nvim_win_get_cursor(0)
+---@param y? integer
+---@param pos? integer[]
+function utils.move_cursor(x, y, pos)
+    pos = pos or api.nvim_win_get_cursor(0)
 
     local line = pos[1] + (y or 0)
     local col = pos[2] + (x or 0)
 
     api.nvim_win_set_cursor(0, { line, col })
+
+    return x
 end
 
 ---@param str string
