@@ -75,32 +75,10 @@ function utils.valid_pair(info, line, start, endd)
     return false
 end
 
-function utils.find_opening(info, line, col)
-    if info.open == info.close then
-        return
-    end
-
-    local o, c = 1, 0
-
-    for i = col + 1, #line do
-        local char = line:sub(i, i)
-
-        if info.open == char then
-            o = o + 1
-        elseif info.close == char then
-            c = c + 1
-        end
-
-        if o == c then
-            return i
-        end
-    end
-end
-
 ---@param info ntab.pair
 ---@param line string
 ---@param col integer
-function utils.find_next(info, line, col) --
+function utils.find_next_nested(info, line, col) --
     local char = line:sub(col, col)
 
     if info.close == char then
@@ -109,7 +87,7 @@ function utils.find_next(info, line, col) --
             local char_info = utils.get_info(char)
 
             if char_info then
-                return math.max(1, i - col - 1)
+                return i
             end
         end
     else
@@ -122,13 +100,42 @@ function utils.find_next(info, line, col) --
 
             if char_info and char == char_info.open then
                 if utils.valid_pair(char_info, line, i + 1, r) then
-                    return math.max(1, i - col - 1)
+                    return i
                 end
             end
         end
 
-        return closing_idx and math.max(1, closing_idx - col - 1)
+        return closing_idx
     end
+end
+
+---@param info ntab.pair
+---@param line string
+---@param col integer
+function utils.find_next_closing(info, line, col) --
+    local char = line:sub(col, col)
+
+    if info.close == char then
+        return utils.find_next_nested(info, line, col)
+    else
+        return utils.find_closing(info, line, col) --
+            or line:find(info.close, col + 1, true)
+    end
+end
+
+---@param info ntab.pair
+---@param line string
+---@param col integer
+function utils.find_next(info, line, col) --
+    local i
+
+    if config.user.behavior == "closing" then
+        i = utils.find_next_closing(info, line, col)
+    else
+        i = utils.find_next_nested(info, line, col)
+    end
+
+    return i and math.max(1, i - col - 1)
 end
 
 ---@param x integer

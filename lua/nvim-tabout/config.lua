@@ -3,12 +3,13 @@ local config = {}
 
 ---@alias ntab.pair { open: string, close: string }
 
+---@alias ntab.behavior "nested" | "closing"
+
 ---@class ntab.user.config
 local defaults = {
     tabkey = "<Tab>",
     act_as_tab = true, -- defaults to tab if tabout action is not available
-    behavior = "nested",
-    debug = false,
+    behavior = "nested", ---@type ntab.behavior
     pairs = { ---@type ntab.pair[]
         { open = "(", close = ")" },
         { open = "[", close = "]" },
