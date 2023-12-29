@@ -6,6 +6,7 @@ local M = {}
 local defaults = {
     tabkey = "<Tab>",
     act_as_tab = true, -- defaults to tab if tabout action is not available
+    behavior = "nested",
     debug = false,
     tabbable = { ---@type Tabout.set
         { open = "(", close = ")" },
@@ -15,6 +16,7 @@ local defaults = {
         { open = "\"", close = "\"" },
         { open = "`", close = "`" },
         { open = "<", close = ">" },
+        { open = "#", close = "]" },
     },
     exclude = {},
 }

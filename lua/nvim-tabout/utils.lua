@@ -13,6 +13,12 @@ function Utils.adj_char(x)
     return line:sub(col, col)
 end
 
+function Utils.tab()
+    if config.user.act_as_tab then
+        api.nvim_feedkeys(Utils.replace("<Tab>"), "n", false)
+    end
+end
+
 function Utils.get_info(char)
     if not char then
         return
@@ -26,6 +32,50 @@ function Utils.get_info(char)
 end
 
 function Utils.find_closing(info, line, col)
+    if info.open == info.close then
+        return line:find(info.close, col + 1, true)
+    end
+
+    local c = 1
+    for i = col + 1, #line do
+        local char = line:sub(i, i)
+
+        if info.open == char then
+            c = c + 1
+        elseif info.close == char then
+            c = c - 1
+        end
+
+        if c == 0 then
+            return i
+        end
+    end
+end
+
+function Utils.valid_pair(info, line, start, endd)
+    if info.open == info.close then
+        return true
+    end
+
+    local c = 1
+    for i = start, endd do
+        local char = line:sub(i, i)
+
+        if info.open == char then
+            c = c + 1
+        elseif info.close == char then
+            c = c - 1
+        end
+
+        if c == 0 then
+            return true
+        end
+    end
+
+    return false
+end
+
+function Utils.find_opening(info, line, col)
     if info.open == info.close then
         return
     end
@@ -51,18 +101,35 @@ end
 ---@param line string
 ---@param col integer
 function Utils.find_next(info, line, col) --
-    local idx = line:find(info.open, col + 1, true) --
-        or line:find(info.close, col + 1, true)
+    local char = line:sub(col, col)
 
-    -- if not idx then
-    for i = col + 1, #line do
-        if Utils.get_info(line:sub(i, i)) then
-            return math.max(1, i - col - 1)
+    if info.close == char then
+        for i = col + 1, #line do
+            char = line:sub(i, i)
+            local char_info = Utils.get_info(char)
+
+            if char_info then
+                return math.max(1, i - col - 1)
+            end
         end
+    else
+        local closing_idx = Utils.find_closing(info, line, col) or (#line + 1)
+
+        local l, r = col + 1, closing_idx - 1
+
+        for i = l, r do
+            char = line:sub(i, i)
+            local char_info = Utils.get_info(char)
+
+            if char_info and char == char_info.open then
+                if Utils.valid_pair(char_info, line, i + 1, r) then
+                    return math.max(1, i - col - 1)
+                end
+            end
+        end
+
+        return math.max(1, closing_idx - col - 1)
     end
-    -- else
-    --     return math.max(1, idx - col - 1)
-    -- end
 end
 
 ---@param x integer
