@@ -113,9 +113,8 @@ function utils.find_next(info, line, col) --
             end
         end
     else
-        local closing_idx = utils.find_closing(info, line, col) or (#line + 1)
-
-        local l, r = col + 1, closing_idx - 1
+        local closing_idx = utils.find_closing(info, line, col)
+        local l, r = col + 1, (closing_idx or #line + 1) - 1
 
         for i = l, r do
             char = line:sub(i, i)
@@ -128,7 +127,7 @@ function utils.find_next(info, line, col) --
             end
         end
 
-        return math.max(1, closing_idx - col - 1)
+        return closing_idx and math.max(1, closing_idx - col - 1)
     end
 end
 
