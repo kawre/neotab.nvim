@@ -1,7 +1,7 @@
 local config = require("nvim-tabout.config")
 local lvls = vim.log.levels
 
----@class tab.Logger
+---@class ntab.logger
 local logger = {}
 
 local function normalize(msg)
@@ -33,18 +33,6 @@ end
 ---@param msg any
 logger.error = function(msg)
     logger.log(msg, lvls.ERROR)
-end
-
----@param err lc.err
-logger.err = function(err)
-    if not err then
-        return logger.error("error")
-    end
-
-    local msg = err.msg or ""
-    local lvl = err.lvl or lvls.ERROR
-
-    logger.log(msg, lvl)
 end
 
 ---@param msg any

@@ -4,48 +4,16 @@ local config = require("nvim-tabout.config")
 local log = require("nvim-tabout.logger")
 local utils = require("nvim-tabout.utils")
 
----@class Nvim.Tabout
-local Tabout = {}
+---@class ntab
+local ntab = {}
 
 local enabled = true
 
-Tabout.toggle = function()
+function ntab.toggle()
     enabled = not enabled
 end
 
-function Tabout.nested(info, line, col)
-    local char = line:sub(col, col)
-
-    if info.close == char then
-        for i = col + 1, #line do
-            char = line:sub(i, i)
-            local char_info = utils.get_info(char)
-
-            if char_info then
-                return math.max(1, i - col - 1)
-            end
-        end
-    else
-        local closing_idx = utils.find_closing(info, line, col) or (#line + 1)
-
-        local l, r = col + 1, closing_idx - 1
-
-        for i = l, r do
-            char = line:sub(i, i)
-            local char_info = utils.get_info(char)
-
-            if char_info and char == char_info.open then
-                if utils.valid_pair(char_info, line, i + 1, r) then
-                    return math.max(1, i - col - 1)
-                end
-            end
-        end
-
-        return math.max(1, closing_idx - col - 1)
-    end
-end
-
-function Tabout.tabout()
+function ntab.tabout()
     if not enabled or vim.tbl_contains(config.user.exclude, vim.bo.filetype) then
         return utils.tab()
     end
@@ -77,8 +45,8 @@ function Tabout.tabout()
     end
 end
 
----@param options ntab
-Tabout.setup = function(options)
+---@param options ntab.user.config
+function ntab.setup(options)
     config.setup(options)
 
     utils.map("i", "<Plug>(Tabout)", "<Cmd>lua require(\"nvim-tabout\").tabout()<CR>")
@@ -88,4 +56,4 @@ Tabout.setup = function(options)
     end
 end
 
-return Tabout
+return ntab
