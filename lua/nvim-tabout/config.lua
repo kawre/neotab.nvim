@@ -25,7 +25,7 @@ local defaults = {
 
         semicolon = {
             enabled = false,
-            ft = { "cs", "c", "cpp", "java", "javascript", "typescript", "go", "dart" },
+            ft = { "cs", "c", "cpp", "java" },
         },
 
         comma = {

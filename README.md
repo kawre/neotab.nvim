@@ -28,7 +28,7 @@ Simple yet convenient Neovim plugin for tabbing in and out of brackets, parenthe
 
 ## 📬 Requirements
 
-- [Neovim] >= 0.5.0
+- [Neovim] >= 0.8.0
 
 ## 📦 Installation
 
@@ -74,7 +74,7 @@ Simple yet convenient Neovim plugin for tabbing in and out of brackets, parenthe
         semicolon = {
             enabled = false,
 
-            ft = { "cs", "c", "cpp", "java", "javascript", "typescript", "go", "dart" },
+            ft = { "cs", "c", "cpp", "java" },
         },
 
         comma = {
@@ -120,6 +120,22 @@ prioritize valid nested pairs first
 https://github.com/kawre/nvim-tabout/assets/69250723/70c79dda-ddf6-4505-9838-0ce85d9d3fe6
 
 prioritize closing pair first
+
+### exclude
+
+ignore these filetypes for `tabout`
+
+```lua
+exclude = {},
+```
+
+## smart punctuators
+
+### semicolon
+
+intellij like behavior for semicolons
+
+https://github.com/kawre/nvim-tabout/assets/69250723/12d08d02-666c-4da6-a9b7-59f9f104bf58
 
 [lazy.nvim]: https://github.com/folke/lazy.nvim
 [neovim]: https://github.com/neovim/neovim
