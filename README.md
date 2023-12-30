@@ -111,9 +111,13 @@ act_as_tab = true,
 
 #### nested
 
-prioritize nested pair first
+https://github.com/kawre/nvim-tabout/assets/69250723/31c0d687-170e-40d8-a2d8-49cd237cb15b
+
+prioritize valid nested pairs first
 
 #### closing
+
+https://github.com/kawre/nvim-tabout/assets/69250723/70c79dda-ddf6-4505-9838-0ce85d9d3fe6
 
 prioritize closing pair first
 
