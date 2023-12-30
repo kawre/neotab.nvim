@@ -21,10 +21,10 @@ function ntab.tabout()
 
     local line = api.nvim_get_current_line()
     local pos = api.nvim_win_get_cursor(0)
-    local offset = tab.out(line, pos)
+    local md = tab.out(line, pos)
 
-    if offset then
-        utils.move_cursor(offset, 0, pos)
+    if md then
+        utils.set_cursor(md.pos)
     else
         utils.tab()
     end

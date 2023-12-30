@@ -1,7 +1,7 @@
 ---@class ntab.config
 local config = {}
 
----@alias ntab.pair { open: string, close: string }
+---@alias ntab.info { open: string, close: string }
 
 ---@alias ntab.behavior "nested" | "closing"
 
@@ -10,7 +10,7 @@ local defaults = {
     tabkey = "<Tab>",
     act_as_tab = true, -- defaults to tab if tabout action is not available
     behavior = "nested", ---@type ntab.behavior
-    pairs = { ---@type ntab.pair[]
+    pairs = { ---@type ntab.info[]
         { open = "(", close = ")" },
         { open = "[", close = "]" },
         { open = "{", close = "}" },
@@ -25,7 +25,7 @@ local defaults = {
 
         semicolon = {
             enabled = false,
-            ft = { "java", "js", "dart" },
+            ft = { "cs", "c", "cpp", "java", "javascript", "typescript", "go", "dart" },
         },
 
         comma = {
@@ -39,7 +39,7 @@ local defaults = {
 ---@type ntab.user.config
 config.user = {}
 
----@type ntab.pair[]
+---@type ntab.info[]
 config.tabbable = {}
 
 config.debug = false

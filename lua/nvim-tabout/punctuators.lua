@@ -8,34 +8,37 @@ local api = vim.api
 local punctuators = {}
 
 function punctuators.semicolon() --
-    if not vim.tbl_contains(config.semicolon.ft, vim.bo.filetype) then
+    if not vim.tbl_contains(config.semicolon.ft, vim.bo.ft) then
         return
     end
 
     local line = api.nvim_get_current_line()
     local pos = api.nvim_win_get_cursor(0)
 
-    local function tabout_rec(offset, dg)
-        local k = pos[2] + offset
-        local i, _, char = tab.out(line, { pos[1], k })
+    local bracket = line:find("}", pos[2], true)
+    if bracket then
+        line = line:sub(0, bracket - 1)
+    end
 
-        if not i or char ~= ")" then
-            return offset
+    local function tabout_rec(cursor, dg)
+        local md = tab.out(line, { pos[1], cursor })
+
+        if not md or md.next.char ~= ")" then
+            return
         end
 
-        local ndg = utils.find_opening({ open = "(", close = ")" }, line, dg)
-        if ndg then
-            return tabout_rec(offset + i, ndg - 1)
+        local newlb = utils.find_opening({ open = "(", close = ")" }, line, dg)
+        if newlb then
+            return tabout_rec(md.next.pos, newlb - 1) or (md.next.pos + 1)
         end
     end
 
-    local offset = tabout_rec(0, pos[2])
+    local cursor = tabout_rec(pos[2], pos[2])
 
-    if offset then
-        local after_tabout = line:sub(pos[2] + offset + 1)
-
+    if cursor then
+        local after_tabout = line:sub(cursor)
         if vim.trim(after_tabout) == "" then
-            utils.move_cursor(offset, 0, pos)
+            utils.set_cursor(cursor)
         end
     end
 end
