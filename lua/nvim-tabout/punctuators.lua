@@ -12,22 +12,22 @@ function punctuators.semicolon() --
         return
     end
 
-    local line = api.nvim_get_current_line()
+    local lines = api.nvim_buf_get_lines(0, 0, -1, false)
     local pos = api.nvim_win_get_cursor(0)
 
-    local bracket = line:find("}", pos[2], true)
+    local bracket = lines[pos[1]]:find("}", pos[2], true)
     if bracket then
-        line = line:sub(0, bracket - 1)
+        lines[pos[1]] = lines[pos[1]]:sub(0, bracket - 1)
     end
 
     local function tabout_rec(cursor, dg)
-        local md = tab.out(line, { pos[1], cursor })
+        local md = tab.out(lines, { pos[1], cursor })
 
         if not md or md.next.char ~= ")" then
             return
         end
 
-        local newlb = utils.find_opening({ open = "(", close = ")" }, line, dg)
+        local newlb = utils.find_opening({ open = "(", close = ")" }, lines[pos[1]], dg)
         if newlb then
             return tabout_rec(md.next.pos, newlb - 1) or (md.next.pos + 1)
         end
@@ -36,7 +36,7 @@ function punctuators.semicolon() --
     local cursor = tabout_rec(pos[2], pos[2])
 
     if cursor then
-        local after_tabout = line:sub(cursor)
+        local after_tabout = lines[pos[1]]:sub(cursor)
         if vim.trim(after_tabout) == "" then
             utils.set_cursor(cursor)
         end

@@ -110,7 +110,6 @@ function utils.find_next_nested(info, line, col) --
     local char = line:sub(col - 1, col - 1)
 
     if info.open == info.close or info.close == char then
-        log.debug("PREV CHAR IS CLOSING OR DUPLICATE PAIR")
         for i = col, #line do
             char = line:sub(i, i)
             local char_info = utils.get_info(char)
@@ -120,7 +119,6 @@ function utils.find_next_nested(info, line, col) --
             end
         end
     else
-        log.debug("FIND CLOSING TAGS")
         local closing_idx = utils.find_closing(info, line, col)
         local l, r = col, (closing_idx or #line)
 
@@ -135,7 +133,6 @@ function utils.find_next_nested(info, line, col) --
             end
         end
 
-        log.debug("PAIR NOT FOUND. FALLBACK TO CLOSING IDX")
         return closing_idx and { cursor = closing_idx, next = closing_idx }
     end
 end
