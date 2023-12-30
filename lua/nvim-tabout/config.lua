@@ -30,7 +30,10 @@ local defaults = {
 
         comma = {
             enabled = false,
-            triggers = { "\"", "'" },
+            triggers = {
+                { open = "'", close = "'" },
+                { open = "\"", close = "\"" },
+            },
             exclude = {},
         },
     },

@@ -35,12 +35,18 @@ function punctuators.semicolon() --
             return
         end
 
+        local between = lines[pos[1]]:sub(cursor, md.next.pos - 1)
+        if vim.trim(between) ~= "" then
+            return
+        end
+
         local open_idx = utils.find_opening({ open = "(", close = ")" }, lines[pos[1]], dg)
         if open_idx then
             log.debug({
                 open_idx = open_idx,
                 md = md,
             }, "open_idx")
+
             return tabout_rec(md.next.pos + 1, open_idx - 1) or (md.next.pos + 1)
         end
     end
@@ -68,9 +74,13 @@ function punctuators.comma()
         return
     end
 
-    if utils.adj_char(1, pos) ~= "," then
+    local next_char = utils.adj_char(1, pos)
+    -- local line = vim.api.nvim_get_current_line()
+    -- utils.find_opening(info, line, col)
+    if next_char ~= "," then
         utils.move_cursor(1, 0, pos)
     end
+    -- ""
 end
 
 function punctuators.handle()

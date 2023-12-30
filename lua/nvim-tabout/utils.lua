@@ -111,7 +111,7 @@ end
 ---@param line string
 ---@param col integer
 ---
----@return ntab.pos | nil
+---@return integer | nil
 function utils.find_next_nested(info, line, col) --
     local char = line:sub(col - 1, col - 1)
 
@@ -122,7 +122,7 @@ function utils.find_next_nested(info, line, col) --
             local char_info = utils.get_info(char)
 
             if char_info then
-                return { cursor = i, next = i }
+                return i
             end
         end
     else
@@ -136,7 +136,7 @@ function utils.find_next_nested(info, line, col) --
 
             if char_info and char == char_info.open then
                 if utils.valid_pair(char_info, line, i + 1, r) then
-                    return { cursor = i, next = i }
+                    return i
                 end
             end
         end
@@ -144,7 +144,7 @@ function utils.find_next_nested(info, line, col) --
         log.debug({
             closing_idx = closing_idx,
         }, "TAB 3 - closing_idx")
-        return closing_idx and { cursor = closing_idx, next = closing_idx }
+        return closing_idx
     end
 end
 
@@ -171,29 +171,29 @@ end
 ---
 ---@return ntab.md | nil
 function utils.find_next(info, line, col) --
-    local pos
+    local i
 
     if config.user.behavior == "closing" then
-        pos = utils.find_next_closing(info, line, col)
+        i = utils.find_next_closing(info, line, col)
     else
-        pos = utils.find_next_nested(info, line, col)
+        i = utils.find_next_nested(info, line, col)
     end
 
-    if pos then
+    if i then
         local prev = {
             pos = col - 1,
             char = line:sub(col - 1, col - 1),
         }
 
         local next = {
-            pos = pos.next,
-            char = line:sub(pos.next, pos.next),
+            pos = i,
+            char = line:sub(i, i),
         }
 
         return {
             prev = prev,
             next = next,
-            pos = math.max(col + 1, pos.cursor),
+            pos = math.max(col + 1, i),
         }
     end
 end
