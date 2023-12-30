@@ -1,4 +1,3 @@
-local ntab = require("nvim-tabout")
 local tab = require("nvim-tabout.tab")
 local utils = require("nvim-tabout.utils")
 local log = require("nvim-tabout.logger")
@@ -34,7 +33,6 @@ function punctuators.semicolon() --
 
     if offset then
         local after_tabout = line:sub(pos[2] + offset + 1)
-        log.debug({ after_tabout = after_tabout })
 
         if vim.trim(after_tabout) == "" then
             utils.move_cursor(offset, 0, pos)
@@ -43,6 +41,10 @@ function punctuators.semicolon() --
 end
 
 function punctuators.comma()
+    if vim.tbl_contains(config.comma.exclude, vim.bo.filetype) then
+        return
+    end
+
     local pos = api.nvim_win_get_cursor(0)
 
     local char = utils.adj_char(0, pos)

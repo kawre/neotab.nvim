@@ -31,6 +31,7 @@ local defaults = {
         comma = {
             enabled = false,
             triggers = { "\"", "'" },
+            exclude = {},
         },
     },
 }
