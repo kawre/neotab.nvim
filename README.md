@@ -9,7 +9,7 @@ Rather than use `treesitter` nodes like other alike plugins, `ntab.nvim`
 uses simple logic to move out of, or find the next best matching pair.
 
 By doing so, you can expect the same consistent behavior
-regardless of the file type or state of the parsed `tree`.
+regardless of the file type or state of the parsed `treesitter` tree.
 
 <!-- ## 📬 Requirements -->
 
@@ -133,7 +133,9 @@ plugins/config overriding the [tabkey](#tabkey) keymap.
 
 To help you find the location that overrides the [tabkey](#tabkey) you can use
 
-`:verbose imap <Tab>`
+```
+:verbose imap <Tab>
+```
 
 ## 🍴 Recipes
 
