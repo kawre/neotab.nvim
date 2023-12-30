@@ -1,9 +1,9 @@
 local api = vim.api
 
-local config = require("nvim-tabout.config")
-local log = require("nvim-tabout.logger")
-local utils = require("nvim-tabout.utils")
-local tab = require("nvim-tabout.tab")
+local config = require("ntab.config")
+local log = require("ntab.logger")
+local utils = require("ntab.utils")
+local tab = require("ntab.tab")
 
 ---@class ntab
 local ntab = {}
@@ -34,7 +34,7 @@ end
 function ntab.setup(options)
     config.setup(options)
 
-    utils.map("i", "<Plug>(Tabout)", "<Cmd>lua require(\"nvim-tabout\").tabout()<CR>")
+    utils.map("i", "<Plug>(ntab.out)", "<Cmd>lua require(\"ntab\").tabout()<CR>")
 
     if config.user.tabkey ~= "" then
         api.nvim_set_keymap("i", config.user.tabkey, "<Plug>(Tabout)", { silent = true })
@@ -42,7 +42,7 @@ function ntab.setup(options)
 
     if config.user.smart_punctuators.enabled then
         api.nvim_create_autocmd("InsertCharPre", {
-            callback = require("nvim-tabout.punctuators").handle,
+            callback = require("ntab.punctuators").handle,
         })
     end
 end

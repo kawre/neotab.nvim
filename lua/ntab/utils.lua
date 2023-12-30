@@ -1,6 +1,6 @@
 local api = vim.api
-local config = require("nvim-tabout.config")
-local log = require("nvim-tabout.logger")
+local config = require("ntab.config")
+local log = require("ntab.logger")
 
 ---@class ntab.utils
 local utils = {}

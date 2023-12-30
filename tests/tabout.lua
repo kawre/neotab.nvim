@@ -1,4 +1,4 @@
-local tab = require("nvim-tabout.tab")
+local tab = require("ntab.tab")
 local mock = require("luassert.mock")
 local stub = require("luassert.stub")
 

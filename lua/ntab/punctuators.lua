@@ -1,7 +1,7 @@
-local tab = require("nvim-tabout.tab")
-local utils = require("nvim-tabout.utils")
-local log = require("nvim-tabout.logger")
-local config = require("nvim-tabout.config").user.smart_punctuators
+local tab = require("ntab.tab")
+local utils = require("ntab.utils")
+local log = require("ntab.logger")
+local config = require("ntab.config").user.smart_punctuators
 local api = vim.api
 
 ---@class ntab.punctuators

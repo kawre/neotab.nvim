@@ -4,7 +4,8 @@ Simple yet convenient Neovim plugin for tabbing in and out of brackets, parenthe
 
 ## why `ntab.nvim`
 
-...
+`ntab.nvim` differs from other a like plugins because it doesn't base on `treesitter` nodes.
+It aims to be consistent no matter the filetype or
 
 <!-- ## 💡 Expected behaviour -->
 
@@ -26,9 +27,11 @@ Simple yet convenient Neovim plugin for tabbing in and out of brackets, parenthe
 
 <!-- | `{\|foo}` | `<Tab>` | `{foo\|}` | - | -->
 
-## 📬 Requirements
+<!-- ## 📬 Requirements -->
 
-- [Neovim] >= 0.8.0
+<!---->
+
+<!-- - [Neovim] >= 0.8.0 -->
 
 ## 📦 Installation
 
@@ -138,4 +141,3 @@ intellij like behavior for semicolons
 https://github.com/kawre/nvim-tabout/assets/69250723/12d08d02-666c-4da6-a9b7-59f9f104bf58
 
 [lazy.nvim]: https://github.com/folke/lazy.nvim
-[neovim]: https://github.com/neovim/neovim

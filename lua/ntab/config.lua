@@ -47,7 +47,7 @@ config.tabbable = {}
 
 config.debug = false
 
-config.name = "nvim-tabout"
+config.name = "ntab"
 
 config.setup = function(options)
     config.user = vim.tbl_deep_extend("force", defaults, options or {})
