@@ -12,6 +12,8 @@ function punctuators.semicolon() --
         return
     end
 
+    log.debug("---------- SMART SEMICOLON")
+
     local lines = api.nvim_buf_get_lines(0, 0, -1, false)
     local pos = api.nvim_win_get_cursor(0)
 
@@ -21,19 +23,30 @@ function punctuators.semicolon() --
     end
 
     local function tabout_rec(cursor, dg)
-        local md = tab.out(lines, { pos[1], cursor })
+        local md = tab.out(lines, { pos[1], cursor - 1 })
+
+        log.debug({
+            cursor = cursor,
+            dg = dg,
+            md = md,
+        }, "md")
 
         if not md or md.next.char ~= ")" then
             return
         end
 
-        local newlb = utils.find_opening({ open = "(", close = ")" }, lines[pos[1]], dg)
-        if newlb then
-            return tabout_rec(md.next.pos, newlb - 1) or (md.next.pos + 1)
+        local open_idx = utils.find_opening({ open = "(", close = ")" }, lines[pos[1]], dg)
+        if open_idx then
+            log.debug({
+                open_idx = open_idx,
+                md = md,
+            }, "open_idx")
+            return tabout_rec(md.next.pos + 1, open_idx - 1) or (md.next.pos + 1)
         end
     end
 
-    local cursor = tabout_rec(pos[2], pos[2])
+    local col = pos[2] + 1
+    local cursor = tabout_rec(col, col - 1)
 
     if cursor then
         local after_tabout = lines[pos[1]]:sub(cursor)

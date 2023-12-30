@@ -26,7 +26,7 @@ function tab.out(lines, pos, opts)
     if prev_info then
         local md = utils.find_next(prev_info, line, col)
         if md then
-            return md
+            return log.debug(md)
         end
     end
 
@@ -44,7 +44,7 @@ function tab.out(lines, pos, opts)
             pos = col + 1,
         }
 
-        return md
+        return log.debug(md)
     end
 end
 

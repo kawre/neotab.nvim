@@ -36,15 +36,15 @@ logger.error = function(msg)
 end
 
 ---@param msg any
----@param show? boolean
+---@param event? string
 ---@return any
-logger.debug = function(msg, show)
+logger.debug = function(msg, event)
     if not config.debug then
         return msg
     end
 
-    local lvl = (show == nil or not show) and lvls.DEBUG or lvls.ERROR
-    logger.log(msg, lvl)
+    local prev = event and (event .. " ") or ""
+    logger.log(prev .. normalize(msg), lvls.DEBUG)
 
     return msg
 end

@@ -43,6 +43,12 @@ function utils.find_opening(info, line, col)
     for i = col, 1, -1 do
         local char = line:sub(i, i)
 
+        -- log.debug({
+        --     line = line:sub(0, col),
+        --     i = i,
+        --     char = char,
+        -- })
+
         if info.open == char then
             c = c - 1
         elseif info.close == char then
@@ -110,6 +116,7 @@ function utils.find_next_nested(info, line, col) --
     local char = line:sub(col - 1, col - 1)
 
     if info.open == info.close or info.close == char then
+        log.debug("---- TAB 1")
         for i = col, #line do
             char = line:sub(i, i)
             local char_info = utils.get_info(char)
@@ -119,7 +126,8 @@ function utils.find_next_nested(info, line, col) --
             end
         end
     else
-        local closing_idx = utils.find_closing(info, line, col)
+        log.debug("---- TAB 2")
+        local closing_idx = utils.find_closing(info, line, col - 1)
         local l, r = col, (closing_idx or #line)
 
         for i = l, r do
@@ -133,6 +141,9 @@ function utils.find_next_nested(info, line, col) --
             end
         end
 
+        log.debug({
+            closing_idx = closing_idx,
+        }, "TAB 3 - closing_idx")
         return closing_idx and { cursor = closing_idx, next = closing_idx }
     end
 end
