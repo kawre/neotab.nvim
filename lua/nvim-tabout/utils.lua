@@ -36,18 +36,13 @@ end
 
 function utils.find_opening(info, line, col)
     if info.open == info.close then
-        return line:reverse():find(info.open, 1, true)
+        local idx = line:sub(1, col):reverse():find(info.open, 1, true)
+        return idx and (#line - idx)
     end
 
     local c = 1
     for i = col, 1, -1 do
         local char = line:sub(i, i)
-
-        -- log.debug({
-        --     line = line:sub(0, col),
-        --     i = i,
-        --     char = char,
-        -- })
 
         if info.open == char then
             c = c - 1

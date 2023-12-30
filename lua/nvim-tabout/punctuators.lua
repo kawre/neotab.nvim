@@ -68,19 +68,27 @@ function punctuators.comma()
     end
 
     local pos = api.nvim_win_get_cursor(0)
-
     local char = utils.adj_char(0, pos)
-    if not vim.tbl_contains(config.comma.triggers, char) then
+
+    local info = vim.tbl_filter(function(o)
+        return char == o.close
+    end, config.comma.triggers)[1]
+
+    if not info then
         return
     end
 
     local next_char = utils.adj_char(1, pos)
-    -- local line = vim.api.nvim_get_current_line()
-    -- utils.find_opening(info, line, col)
-    if next_char ~= "," then
+    if next_char == "," then
+        return
+    end
+
+    local line = vim.api.nvim_get_current_line()
+    local oi = utils.find_opening(info, line, pos[2])
+
+    if oi then
         utils.move_cursor(1, 0, pos)
     end
-    -- ""
 end
 
 function punctuators.handle()

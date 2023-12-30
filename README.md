@@ -82,7 +82,7 @@ Simple yet convenient Neovim plugin for tabbing in and out of brackets, parenthe
 
             triggers = {
                 { open = "'", close = "'" },
-                { open = "\"", close = "\"" },
+                { open = '"', close = '"' },
             },
 
             exclude = {},
