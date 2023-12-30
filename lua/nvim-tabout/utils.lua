@@ -107,7 +107,7 @@ end
 
 ---@alias ntab.pos { cursor: integer, char: integer }
 
----@param info ntab.info
+---@param info ntab.pair
 ---@param line string
 ---@param col integer
 ---
@@ -148,24 +148,24 @@ function utils.find_next_nested(info, line, col) --
     end
 end
 
----@param info ntab.info
+---@param info ntab.pair
 ---@param line string
 ---@param col integer
 function utils.find_next_closing(info, line, col) --
-    local char = line:sub(col, col)
+    local open_char = line:sub(col - 1, col - 1)
 
     local i
     if info.open == info.close then
-        i = line:find(info.close, col + 1, true) --
-    elseif info.close ~= char then
+        i = line:find(info.close, col, true) --
+    elseif open_char ~= info.close then
         i = utils.find_closing(info, line, col) --
-            or line:find(info.close, col + 1, true)
+            or line:find(info.close, col, true)
     end
 
     return i or utils.find_next_nested(info, line, col)
 end
 
----@param info ntab.info
+---@param info ntab.pair
 ---@param line string
 ---@param col integer
 ---

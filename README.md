@@ -1,4 +1,4 @@
-# nvim-tabout
+# ntab.nvim
 
 Simple yet convenient Neovim plugin for tabbing in and out of brackets, parentheses, quotes, and more.
 
@@ -13,14 +13,96 @@ Simple yet convenient Neovim plugin for tabbing in and out of brackets, parenthe
 | `fn foo(bar\|) {}` | `<Tab>` | `fn foo(bar)\| {}` | - |
 | `{\|foo}` | `<Tab>` | `{foo\|}` | - |
 
-## 💾 installation
+## 📬 Requirements
 
-### [lazy](https://github.com/folke/lazy.nvim)
+- [Neovim] >= 0.5.0
+
+## 📦 Installation
+
+- [lazy.nvim]
 
 ```lua
-return {
-    "kawre/nvim-tabout",
-    event = { "InsertEnter" },
-    opts = {},
+{
+    "kawre/ntab.nvim",
+    event = "InsertEnter",
+    opts = {
+        -- configuration goes here
+    },
 }
 ```
+
+## 🛠️ Configuration
+
+### ⚙️ default configuration
+
+```lua
+{
+    tabkey = "<Tab>",
+
+    act_as_tab = true, -- defaults to tab if tabout action is not available
+
+    behavior = "nested", ---@type ntab.behavior
+
+    pairs = { ---@type ntab.pair[]
+        { open = "(", close = ")" },
+        { open = "[", close = "]" },
+        { open = "{", close = "}" },
+        { open = "'", close = "'" },
+        { open = "\"", close = "\"" },
+        { open = "`", close = "`" },
+        { open = "<", close = ">" },
+    },
+
+    exclude = {},
+
+    smart_punctuators = {
+        enabled = false,
+
+        semicolon = {
+            enabled = false,
+
+            ft = { "cs", "c", "cpp", "java", "javascript", "typescript", "go", "dart" },
+        },
+
+        comma = {
+            enabled = false,
+
+            triggers = {
+                { open = "'", close = "'" },
+                { open = "\"", close = "\"" },
+            },
+
+            exclude = {},
+        },
+    },
+}
+```
+
+### tabkey
+
+key switch triggers tabout
+
+```lua
+tabkey = "<Tab>",
+```
+
+### act_as_tab
+
+fallback to tab, if tabout is not available
+
+```lua
+act_as_tab = true,
+```
+
+### behavior
+
+#### nested
+
+prioritize nested pair first
+
+#### closing
+
+prioritize closing pair first
+
+[lazy.nvim]: https://github.com/folke/lazy.nvim
+[neovim]: https://github.com/neovim/neovim
