@@ -15,7 +15,7 @@ local defaults = {
         { open = "[", close = "]" },
         { open = "{", close = "}" },
         { open = "'", close = "'" },
-        { open = "\"", close = "\"" },
+        { open = '"', close = '"' },
         { open = "`", close = "`" },
         { open = "<", close = ">" },
     },
@@ -32,7 +32,7 @@ local defaults = {
             enabled = false,
             triggers = {
                 { open = "'", close = "'" },
-                { open = "\"", close = "\"" },
+                { open = '"', close = '"' },
             },
             exclude = {},
         },

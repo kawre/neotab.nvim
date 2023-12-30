@@ -34,10 +34,10 @@ end
 function ntab.setup(options)
     config.setup(options)
 
-    utils.map("i", "<Plug>(ntab.out)", "<Cmd>lua require(\"ntab\").tabout()<CR>")
+    utils.map("i", "<Plug>(ntab.out)", '<Cmd>lua require("ntab").tabout()<CR>')
 
     if config.user.tabkey ~= "" then
-        api.nvim_set_keymap("i", config.user.tabkey, "<Plug>(Tabout)", { silent = true })
+        api.nvim_set_keymap("i", config.user.tabkey, "<Plug>(ntab.out)", { silent = true })
     end
 
     if config.user.smart_punctuators.enabled then

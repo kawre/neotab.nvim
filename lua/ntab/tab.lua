@@ -4,19 +4,27 @@ local log = require("ntab.logger")
 ---@class ntab.tab
 local tab = {}
 
+---@alias ntab.out.opts { ignore_beginning: boolean }
+
 ---@param lines string[]
 ---@param pos integer[]
----@param opts? table
+---@param opts? ntab.out.opts
 ---
 ---@return ntab.md | nil
 function tab.out(lines, pos, opts)
+    opts = vim.tbl_extend("force", {
+        ignore_beginning = false,
+    }, opts or {})
+
     local line = lines[pos[1]]
 
     log.debug("------- TAB -------")
 
-    local before_cursor = line:sub(0, pos[2])
-    if vim.trim(before_cursor) == "" then
-        return
+    if not opts.ignore_beginning then
+        local before_cursor = line:sub(0, pos[2])
+        if vim.trim(before_cursor) == "" then
+            return
+        end
     end
 
     -- convert from 0 to 1 based indexing

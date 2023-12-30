@@ -23,7 +23,7 @@ function punctuators.semicolon() --
     end
 
     local function tabout_rec(cursor, dg)
-        local md = tab.out(lines, { pos[1], cursor - 1 })
+        local md = tab.out(lines, { pos[1], cursor - 1 }, { ignore_beginning = true })
 
         log.debug({
             cursor = cursor,
@@ -40,15 +40,15 @@ function punctuators.semicolon() --
             return
         end
 
-        local open_idx = utils.find_opening({ open = "(", close = ")" }, lines[pos[1]], dg)
-        if open_idx then
-            log.debug({
-                open_idx = open_idx,
-                md = md,
-            }, "open_idx")
-
-            return tabout_rec(md.next.pos + 1, open_idx - 1) or (md.next.pos + 1)
-        end
+        -- local open_idx = utils.find_opening({ open = "(", close = ")" }, lines[pos[1]], dg)
+        -- if open_idx then
+        --     log.debug({
+        --         open_idx = open_idx,
+        --         md = md,
+        --     }, "open_idx")
+        --
+        return tabout_rec(md.next.pos + 1) or (md.next.pos + 1)
+        -- end
     end
 
     local col = pos[2] + 1
