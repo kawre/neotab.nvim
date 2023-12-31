@@ -1,12 +1,13 @@
 ---@class ntab.config
-local config = {}
-
----@alias ntab.pair { open: string, close: string }
-
----@alias ntab.behavior "nested" | "closing"
+local config = {
+    user = {}, ---@type ntab.user.config
+    pairs = {}, ---@type ntab.pair[]
+    debug = false,
+    name = "neotab.nvim",
+}
 
 ---@class ntab.user.config
-local defaults = {
+config.defaults = {
     tabkey = "<Tab>",
     act_as_tab = true, -- defaults to tab if tabout action is not available
     behavior = "nested", ---@type ntab.behavior
@@ -22,37 +23,21 @@ local defaults = {
     exclude = {},
     smart_punctuators = {
         enabled = false,
-
         semicolon = {
             enabled = false,
             ft = { "cs", "c", "cpp", "java" },
         },
-
-        comma = {
+        escape = {
             enabled = false,
-            triggers = {
-                { open = "'", close = "'" },
-                { open = '"', close = '"' },
-            },
-            exclude = {},
+            triggers = {}, ---@type table<string, ntab.trigger>
         },
     },
 }
 
----@type ntab.user.config
-config.user = {}
-
----@type ntab.pair[]
-config.tabbable = {}
-
-config.debug = false
-
-config.name = "neotab.nvim"
-
-config.setup = function(options)
-    config.user = vim.tbl_deep_extend("force", defaults, options or {})
+function config.setup(options)
+    config.user = vim.tbl_deep_extend("force", config.defaults, options or {})
     config.debug = config.user.debug
-    config.tabbable = config.user.pairs
+    config.pairs = config.user.pairs
 end
 
 return config

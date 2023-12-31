@@ -1,3 +1,17 @@
----@alias ntab.inf { pos: integer, char: string }
+---@alias ntab.info { pos: integer, char: string }
 
----@alias ntab.md { prev: ntab.inf, next: ntab.inf, pos: integer }
+---@alias ntab.pair { open: string, close: string }
+
+---@alias ntab.behavior
+---| "nested"
+---| "closing"
+
+---@class ntab.md
+---@field prev ntab.info
+---@field next ntab.info
+---@field pos integer
+
+---@class ntab.trigger
+---@field pairs ntab.pair[]
+---@field space? { before: boolean, after: boolean }
+---@field ft? string[]

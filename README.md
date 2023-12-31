@@ -38,11 +38,8 @@ regardless of the file type or state of the parsed `treesitter` tree.
 ```lua
 {
     tabkey = "<Tab>",
-
-    act_as_tab = true,
-
+    act_as_tab = true, -- defaults to tab if tabout action is not available
     behavior = "nested", ---@type ntab.behavior
-
     pairs = { ---@type ntab.pair[]
         { open = "(", close = ")" },
         { open = "[", close = "]" },
@@ -50,29 +47,18 @@ regardless of the file type or state of the parsed `treesitter` tree.
         { open = "'", close = "'" },
         { open = '"', close = '"' },
         { open = "`", close = "`" },
-        { open = "<", close = ">" },   
+        { open = "<", close = ">" },
     },
-
     exclude = {},
-
     smart_punctuators = {
         enabled = false,
-
         semicolon = {
             enabled = false,
-
             ft = { "cs", "c", "cpp", "java" },
         },
-
-        comma = {
+        escape = {
             enabled = false,
-
-            triggers = {
-                { open = "'", close = "'" },
-                { open = '"', close = '"' },
-            },
-
-            exclude = {},
+            triggers = {}, ---@type table<string, ntab.trigger>
         },
     },
 }
@@ -125,6 +111,10 @@ exclude = {},
 intellij like behavior for semicolons
 
 https://github.com/kawre/neotab.nvim/assets/69250723/12d08d02-666c-4da6-a9b7-59f9f104bf58
+
+### escape
+
+escapes pairs with specified punctuators
 
 ## 🚀 Usage
 
