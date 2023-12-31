@@ -1,4 +1,4 @@
-local tab = require("ntab.tab")
+local tab = require("neotab.tab")
 local mock = require("luassert.mock")
 local stub = require("luassert.stub")
 

@@ -1,20 +1,20 @@
 local api = vim.api
 
-local config = require("ntab.config")
-local log = require("ntab.logger")
-local utils = require("ntab.utils")
-local tab = require("ntab.tab")
+local config = require("neotab.config")
+local log = require("neotab.logger")
+local utils = require("neotab.utils")
+local tab = require("neotab.tab")
 
 ---@class ntab
-local ntab = {}
+local neotab = {}
 
 local enabled = true
 
-function ntab.toggle()
+function neotab.toggle()
     enabled = not enabled
 end
 
-function ntab.tabout()
+function neotab.tabout()
     if not enabled or vim.tbl_contains(config.user.exclude, vim.bo.filetype) then
         return utils.tab()
     end
@@ -31,20 +31,20 @@ function ntab.tabout()
 end
 
 ---@param options ntab.user.config
-function ntab.setup(options)
+function neotab.setup(options)
     config.setup(options)
 
-    utils.map("i", "<Plug>(ntab.out)", '<Cmd>lua require("ntab").tabout()<CR>')
+    utils.map("i", "<Plug>(neotab-out)", '<Cmd>lua require("neotab").tabout()<CR>')
 
     if config.user.tabkey ~= "" then
-        api.nvim_set_keymap("i", config.user.tabkey, "<Plug>(ntab.out)", { silent = true })
+        api.nvim_set_keymap("i", config.user.tabkey, "<Plug>(neotab-out)", { silent = true })
     end
 
     if config.user.smart_punctuators.enabled then
         api.nvim_create_autocmd("InsertCharPre", {
-            callback = require("ntab.punctuators").handle,
+            callback = require("neotab.punctuators").handle,
         })
     end
 end
 
-return ntab
+return neotab

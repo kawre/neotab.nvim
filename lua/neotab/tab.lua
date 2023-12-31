@@ -1,5 +1,5 @@
-local utils = require("ntab.utils")
-local log = require("ntab.logger")
+local utils = require("neotab.utils")
+local log = require("neotab.logger")
 
 ---@class ntab.tab
 local tab = {}

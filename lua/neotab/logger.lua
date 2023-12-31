@@ -1,4 +1,4 @@
-local config = require("ntab.config")
+local config = require("neotab.config")
 local lvls = vim.log.levels
 
 ---@class ntab.logger

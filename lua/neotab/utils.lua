@@ -1,6 +1,6 @@
 local api = vim.api
-local config = require("ntab.config")
-local log = require("ntab.logger")
+local config = require("neotab.config")
+local log = require("neotab.logger")
 
 ---@class ntab.utils
 local utils = {}

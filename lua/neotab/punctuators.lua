@@ -1,7 +1,7 @@
-local tab = require("ntab.tab")
-local utils = require("ntab.utils")
-local log = require("ntab.logger")
-local config = require("ntab.config").user.smart_punctuators
+local tab = require("neotab.tab")
+local utils = require("neotab.utils")
+local log = require("neotab.logger")
+local config = require("neotab.config").user.smart_punctuators
 local api = vim.api
 
 ---@class ntab.punctuators
