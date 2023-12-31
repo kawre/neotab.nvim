@@ -11,11 +11,16 @@ https://github.com/kawre/neotab.nvim/assets/69250723/86754608-352e-4d6f-b2a6-cf5
 
 ## why `neotab.nvim`
 
-Rather than use `treesitter` nodes like other alike plugins, `neotab.nvim`
-uses simple logic to move in and out of, or find the next best matching pair.
+Unlike other similar plugins that tabout out of `treesitter` nodes,
+`neotab.nvim` uses simple logic to move in and out of pairs or
+find the next best matching pair.
 
-By doing so, you can expect the same consistent behavior
-regardless of the file type or state of the parsed `treesitter` tree.
+This approach ensures a consistent behavior regardless of the file type
+or the state of the parsed `treesitter` tree.
+
+This plugin doesn't aim to replace existing similar plugins.
+Instead, it offers a different, less fancy but more predictable
+and consistent method for tabbing out of pairs.
 
 <!-- ## 📬 Requirements -->
 
@@ -135,7 +140,6 @@ escape = {
     triggers = { ---@type table<string, ntab.trigger>
         ["+"] = {
             pairs = {
-                { open = "'", close = "'" },
                 { open = '"', close = '"' },
             },
             space = { before = true, after = true },
