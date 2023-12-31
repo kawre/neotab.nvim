@@ -4,8 +4,6 @@ local log = require("neotab.logger")
 ---@class ntab.tab
 local tab = {}
 
----@alias ntab.out.opts { ignore_beginning: boolean }
-
 ---@param lines string[]
 ---@param pos integer[]
 ---@param opts? ntab.out.opts

@@ -7,6 +7,8 @@
 Simple yet convenient Neovim plugin for tabbing in and out of brackets,
 parentheses, quotes, and more.
 
+https://github.com/kawre/neotab.nvim/assets/69250723/86754608-352e-4d6f-b2a6-cf5b6fd848a9
+
 ## why `neotab.nvim`
 
 Rather than use `treesitter` nodes like other alike plugins, `neotab.nvim`
@@ -92,13 +94,13 @@ act_as_tab = true,
 
 prioritize valid nested pairs first
 
-https://github.com/kawre/neotab.nvim/assets/69250723/31c0d687-170e-40d8-a2d8-49cd237cb15b
+https://github.com/kawre/neotab.nvim/assets/69250723/3ad6c1ef-814f-431c-a8c0-fcdc85b560cf
 
 #### closing
 
 prioritize closing pair first
 
-https://github.com/kawre/neotab.nvim/assets/69250723/70c79dda-ddf6-4505-9838-0ce85d9d3fe6
+https://github.com/kawre/neotab.nvim/assets/69250723/fdb7158d-ec09-437e-9c20-580cdff0719a
 
 ### exclude
 
@@ -114,33 +116,46 @@ exclude = {},
 
 intellij like behavior for semicolons
 
-https://github.com/kawre/neotab.nvim/assets/69250723/12d08d02-666c-4da6-a9b7-59f9f104bf58
+```lua
+semicolon = {
+    enabled = false,
+    ft = { "cs", "c", "cpp", "java" },
+},
+```
 
 ### escape
 
 escapes pairs with specified punctuators
 
+configuration from `demo.mp4`
+
 ```lua
-triggers = {
-    ["+"] = {
-        pairs = {
-            { open = "'", close = "'" },
-            { open = '"', close = '"' },
+escape = {
+    enabled = true,
+    triggers = { ---@type table<string, ntab.trigger>
+        triggers = {
+            ["+"] = {
+                pairs = {
+                    { open = "'", close = "'" },
+                    { open = '"', close = '"' },
+                },
+                space = { before = true, after = true },
+                ft = { "java" },
+            },
+            [","] = {
+                pairs = {
+                    { open = "'", close = "'" },
+                    { open = '"', close = '"' },
+                },
+                space = { after = true },
+            },
         },
-        space = { before = true, after = true },
-        ft = { "java" },
-    },
-    [","] = {
-        pairs = {
-            { open = "'", close = "'" },
-            { open = '"', close = '"' },
-        },
-        space = { after = true },
     },
 },
 ```
 
-https://github.com/kawre/neotab.nvim/assets/69250723/194e2af1-4890-4bfa-89e1-f183c9037e40
+When the `ft` is defined, the corresponding trigger will apply to the specified
+file types. Otherwise, it will be effective no matter the file type.
 
 ## 🚀 Usage
 

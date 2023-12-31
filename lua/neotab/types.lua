@@ -2,6 +2,8 @@
 
 ---@alias ntab.pair { open: string, close: string }
 
+---@alias ntab.out.opts { ignore_beginning?: boolean }
+
 ---@alias ntab.behavior
 ---| "nested"
 ---| "closing"
@@ -13,5 +15,5 @@
 
 ---@class ntab.trigger
 ---@field pairs ntab.pair[]
----@field space? { before: boolean, after: boolean }
+---@field space? { before?: boolean, after?: boolean }
 ---@field ft? string[]

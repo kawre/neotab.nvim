@@ -15,10 +15,10 @@ config.defaults = {
         { open = "(", close = ")" },
         { open = "[", close = "]" },
         { open = "{", close = "}" },
+        { open = "<", close = ">" },
         { open = "'", close = "'" },
         { open = '"', close = '"' },
         { open = "`", close = "`" },
-        { open = "<", close = ">" },
     },
     exclude = {},
     smart_punctuators = {
