@@ -2,10 +2,10 @@
 
 # 🧩 neotab.nvim
 
-</div>
-
 Simple yet convenient Neovim plugin for tabbing in and out of brackets,
 parentheses, quotes, and more.
+
+</div>
 
 https://github.com/kawre/neotab.nvim/assets/69250723/86754608-352e-4d6f-b2a6-cf5b6fd848a9
 
@@ -44,7 +44,7 @@ regardless of the file type or state of the parsed `treesitter` tree.
 ```lua
 {
     tabkey = "<Tab>",
-    act_as_tab = true, -- defaults to tab if tabout action is not available
+    act_as_tab = true, -- fallback to tab, if `tabout` action is not available
     behavior = "nested", ---@type ntab.behavior
     pairs = { ---@type ntab.pair[]
         { open = "(", close = ")" },
@@ -82,7 +82,7 @@ tabkey = "<Tab>",
 
 ### act_as_tab
 
-fallback to tab, if tabout is not available
+fallback to tab, if `tabout` action is not available
 
 ```lua
 act_as_tab = true,
@@ -133,22 +133,20 @@ configuration from `demo.mp4`
 escape = {
     enabled = true,
     triggers = { ---@type table<string, ntab.trigger>
-        triggers = {
-            ["+"] = {
-                pairs = {
-                    { open = "'", close = "'" },
-                    { open = '"', close = '"' },
-                },
-                space = { before = true, after = true },
-                ft = { "java" },
+        ["+"] = {
+            pairs = {
+                { open = "'", close = "'" },
+                { open = '"', close = '"' },
             },
-            [","] = {
-                pairs = {
-                    { open = "'", close = "'" },
-                    { open = '"', close = '"' },
-                },
-                space = { after = true },
+            space = { before = true, after = true },
+            ft = { "java" },
+        },
+        [","] = {
+            pairs = {
+                { open = "'", close = "'" },
+                { open = '"', close = '"' },
             },
+            space = { after = true },
         },
     },
 },
@@ -177,13 +175,12 @@ To help you find the location that overrides the [tabkey](#tabkey) you can use
 2. set `<Plug>(neotab-out)` as a fallback to luasnip
 
 ```lua
-local M = {
+{
     "L3MON4D3/LuaSnip",
     build = "make install_jsregexp",
     dependencies = {
         "neotab.nvim",
     },
-    event = "VeryLazy",
     keys = {
         {
             "<Tab>",
@@ -196,9 +193,8 @@ local M = {
             silent = true,
             mode = "i",
         },
-    }
+    },
 }
-
 ```
 
 ### [nvim-cmp] and [luasnip] integration example
@@ -208,7 +204,7 @@ local M = {
 2. set `require("neotab").tabout()` as a fallback to both nvim-cmp and luasnip
 
 ```lua
-["<Tab>"] = function(fallback)
+["<Tab>"] = function()
   if cmp.visible() then
     cmp.confirm({
         behavior = cmp.ConfirmBehavior.Insert,
