@@ -17,7 +17,7 @@ function punctuators.semicolon() --
     local lines = api.nvim_buf_get_lines(0, 0, -1, false)
     local pos = api.nvim_win_get_cursor(0)
 
-    local bracket = lines[pos[1]]:find("}", pos[2], true)
+    local bracket = lines[pos[1]]:find("}", pos[2] + 1, true)
     if bracket then
         lines[pos[1]] = lines[pos[1]]:sub(0, bracket - 1)
     end
