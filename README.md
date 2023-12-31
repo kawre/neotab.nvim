@@ -77,9 +77,9 @@ and consistent method for tabbing out of pairs.
 
 ### tabkey
 
-key which triggers `tabout`
+the key that triggers the `tabout` action
 
-to not bind to any key, set to `""`
+to not bind to any key, set it to `""`
 
 ```lua
 tabkey = "<Tab>",
@@ -169,6 +169,12 @@ To help you find the location that overrides the [tabkey](#tabkey) you can use
 ```
 :verbose imap <Tab>
 ```
+
+### Plug API
+
+| Mode | plug                      | action              |
+| ---- | ------------------------- | ------------------- |
+| i    | `<Plug>(neotab-out)`      | tabout              |
 
 ## 🍴 Recipes
 
