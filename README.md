@@ -1,4 +1,8 @@
-# neotab.nvim
+<div align="center">
+
+# 🧩 neotab.nvim
+
+</div>
 
 Simple yet convenient Neovim plugin for tabbing in and out of brackets,
 parentheses, quotes, and more.
@@ -115,6 +119,28 @@ https://github.com/kawre/neotab.nvim/assets/69250723/12d08d02-666c-4da6-a9b7-59f
 ### escape
 
 escapes pairs with specified punctuators
+
+```lua
+triggers = {
+    ["+"] = {
+        pairs = {
+            { open = "'", close = "'" },
+            { open = '"', close = '"' },
+        },
+        space = { before = true, after = true },
+        ft = { "java" },
+    },
+    [","] = {
+        pairs = {
+            { open = "'", close = "'" },
+            { open = '"', close = '"' },
+        },
+        space = { after = true },
+    },
+},
+```
+
+https://github.com/kawre/neotab.nvim/assets/69250723/194e2af1-4890-4bfa-89e1-f183c9037e40
 
 ## 🚀 Usage
 

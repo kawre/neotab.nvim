@@ -4,8 +4,6 @@ local log = require("neotab.logger")
 local config = require("neotab.config").user.smart_punctuators
 local api = vim.api
 
----
-
 ---@class ntab.punctuators
 local punctuators = {}
 

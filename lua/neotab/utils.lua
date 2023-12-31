@@ -29,7 +29,7 @@ function utils.get_info(char)
 
     local res = vim.tbl_filter(function(o)
         return o.close == char or o.open == char
-    end, config.tabbable)
+    end, config.pairs)
 
     return not vim.tbl_isempty(res) and res[1] or nil
 end
