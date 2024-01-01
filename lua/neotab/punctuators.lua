@@ -11,12 +11,23 @@ function punctuators.semicolon() --
     local lines = api.nvim_buf_get_lines(0, 0, -1, false)
     local pos = api.nvim_win_get_cursor(0)
 
+    -- check if cursor is inside foor loop
+    local _, for_e = lines[pos[1]]:find("^%s*for%s*%(")
+    if for_e then
+        local s2 = lines[pos[1]]:find("%)", for_e + 1)
+        if s2 and pos[2] + 1 <= s2 then
+            return
+        end
+    end
+
+    -- check if cursor is inside a block
     local bracket = lines[pos[1]]:find("}", pos[2] + 1, true)
     if bracket then
         lines[pos[1]] = lines[pos[1]]:sub(0, bracket - 1)
     end
 
-    local function tabout_rec(cursor, dg)
+    ---@return ntab.md?
+    local function tabout_rec(cursor)
         local md = tab.out(lines, { pos[1], cursor - 1 }, { ignore_beginning = true })
 
         if not md or md.next.char ~= ")" then
@@ -28,24 +39,15 @@ function punctuators.semicolon() --
             return
         end
 
-        -- local open_idx = utils.find_opening({ open = "(", close = ")" }, lines[pos[1]], dg)
-        -- if open_idx then
-        --     log.debug({
-        --         open_idx = open_idx,
-        --         md = md,
-        --     }, "open_idx")
-        -- end
-
-        return tabout_rec(md.next.pos + 1) or (md.next.pos + 1)
+        return tabout_rec(md.next.pos + 1) or md
     end
 
-    local col = pos[2] + 1
-    local cursor = tabout_rec(col, col - 1)
+    local md = tabout_rec(pos[2] + 1)
 
-    if cursor then
-        local after_tabout = lines[pos[1]]:sub(cursor)
+    if md then
+        local after_tabout = lines[pos[1]]:sub(md.next.pos + 1)
         if vim.trim(after_tabout) == "" then
-            utils.set_cursor(cursor)
+            utils.set_cursor(md.next.pos + 1)
         end
     end
 end

@@ -43,7 +43,7 @@ logger.debug = function(msg, event)
         return msg
     end
 
-    local prev = event and (event .. " ") or ""
+    local prev = event and (event .. "\n") or ""
     logger.log(prev .. normalize(msg), lvls.DEBUG)
 
     return msg

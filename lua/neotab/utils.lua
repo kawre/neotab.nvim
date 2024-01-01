@@ -111,7 +111,6 @@ function utils.find_next_nested(info, line, col) --
     local char = line:sub(col - 1, col - 1)
 
     if info.open == info.close or info.close == char then
-        log.debug("---- TAB 1")
         for i = col, #line do
             char = line:sub(i, i)
             local char_info = utils.get_info(char)
@@ -121,7 +120,6 @@ function utils.find_next_nested(info, line, col) --
             end
         end
     else
-        log.debug("---- TAB 2")
         local closing_idx = utils.find_closing(info, line, col - 1)
         local l, r = col, (closing_idx or #line)
 
@@ -136,9 +134,6 @@ function utils.find_next_nested(info, line, col) --
             end
         end
 
-        log.debug({
-            closing_idx = closing_idx,
-        }, "TAB 3 - closing_idx")
         return closing_idx
     end
 end

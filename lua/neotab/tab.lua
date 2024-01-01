@@ -16,8 +16,6 @@ function tab.out(lines, pos, opts)
 
     local line = lines[pos[1]]
 
-    log.debug("------- TAB -------")
-
     if not opts.ignore_beginning then
         local before_cursor = line:sub(0, pos[2])
         if vim.trim(before_cursor) == "" then

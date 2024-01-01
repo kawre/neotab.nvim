@@ -117,7 +117,7 @@ exclude = {},
 
 ## smart punctuators
 
-### semicolon
+### semicolon (experimental)
 
 intellij like behavior for semicolons
 
