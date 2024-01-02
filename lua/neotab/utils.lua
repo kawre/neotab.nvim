@@ -22,7 +22,7 @@ function utils.tab()
     end
 end
 
-function utils.get_info(char)
+function utils.get_pair(char)
     if not char then
         return
     end
@@ -77,13 +77,14 @@ function utils.find_closing(info, line, col)
     end
 end
 
-function utils.valid_pair(info, line, start, endd)
-    if info.open == info.close then
+function utils.valid_pair(info, line, l, r)
+    -- log.debug(line:sub(l, r), "line sub")
+    if info.open == info.close and line:sub(l, r):find(info.open, 1, true) then
         return true
     end
 
     local c = 1
-    for i = start, endd do
+    for i = l, r do
         local char = line:sub(i, i)
 
         if info.open == char then
@@ -113,7 +114,7 @@ function utils.find_next_nested(info, line, col) --
     if info.open == info.close or info.close == char then
         for i = col, #line do
             char = line:sub(i, i)
-            local char_info = utils.get_info(char)
+            local char_info = utils.get_pair(char)
 
             if char_info then
                 return i
@@ -122,19 +123,23 @@ function utils.find_next_nested(info, line, col) --
     else
         local closing_idx = utils.find_closing(info, line, col - 1)
         local l, r = col, (closing_idx or #line)
+        local first
 
+        log.debug(line:sub(l, r))
         for i = l, r do
             char = line:sub(i, i)
-            local char_info = utils.get_info(char)
+            local char_info = utils.get_pair(char)
 
             if char_info and char == char_info.open then
+                first = first or i
+
                 if utils.valid_pair(char_info, line, i + 1, r) then
                     return i
                 end
             end
         end
 
-        return closing_idx
+        return closing_idx or first
     end
 end
 

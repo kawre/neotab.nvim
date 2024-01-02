@@ -3,12 +3,7 @@
     "library": {
       "enabled": true,
       "plugins": [
-        "telescope.nvim",
-        "plenary.nvim",
-        "nui.nvim",
-        "nvim-web-devicons",
-        "image.nvim",
-        "nvim-treesitter"
+        "plenary.nvim"
       ]
     }
   },
@@ -18,8 +13,5 @@
         "enabled": true
       }
     }
-  },
-  "lspconfig": {
-    "sumneko_lua": {}
   }
 }

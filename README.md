@@ -49,7 +49,7 @@ and consistent method for tabbing out of pairs.
 ```lua
 {
     tabkey = "<Tab>",
-    act_as_tab = true, -- fallback to tab, if `tabout` action is not available
+    act_as_tab = true,
     behavior = "nested", ---@type ntab.behavior
     pairs = { ---@type ntab.pair[]
         { open = "(", close = ")" },
@@ -195,8 +195,8 @@ To help you find the location that overrides the [tabkey](#tabkey) you can use
         {
             "<Tab>",
             function()
-                return require("luasnip").jumpable(1)
-                    and "<Plug>luasnip-jump-next"
+                return require("luasnip").expand_or_jumpable()
+                    and "<Plug>luasnip-expand-or-jump"
                     or "<Plug>(neotab-out)"
             end,
             expr = true,
@@ -214,18 +214,21 @@ To help you find the location that overrides the [tabkey](#tabkey) you can use
 2. set `require("neotab").tabout()` as a fallback to both nvim-cmp and luasnip
 
 ```lua
-["<Tab>"] = function()
-  if cmp.visible() then
-    cmp.confirm({
-        behavior = cmp.ConfirmBehavior.Insert,
-        select = true
-      })
-  elseif require("luasnip").jumpable(1) then
-    require("luasnip").jump(1)
-  else
-    require("neotab").tabout()
-  end
-end,
+local cmp = require("cmp")
+local luasnip = require("luasnip")
+local neotab = require("neotab")
+```
+
+```lua
+["<Tab>"] = cmp.mapping(function()
+    if cmp.visible() then
+        cmp.select_next_item()
+    elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+    else
+        neotab.tabout()
+    end
+end),
 ```
 
 ## 🙌 Credits

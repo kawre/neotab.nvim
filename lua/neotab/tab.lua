@@ -14,6 +14,7 @@ function tab.out(lines, pos, opts)
         ignore_beginning = false,
     }, opts or {})
 
+    log.debug(pos, "cursor pos")
     local line = lines[pos[1]]
 
     if not opts.ignore_beginning then
@@ -26,20 +27,19 @@ function tab.out(lines, pos, opts)
     -- convert from 0 to 1 based indexing
     local col = pos[2] + 1
 
-    local prev_info = utils.get_info(line:sub(col - 1, col - 1))
-    if prev_info then
-        local md = utils.find_next(prev_info, line, col)
+    local prev_pair = utils.get_pair(line:sub(col - 1, col - 1))
+    if prev_pair then
+        local md = utils.find_next(prev_pair, line, col)
         if md then
-            return log.debug(md)
+            return log.debug(md, "prev pair")
         end
     end
 
-    local curr_info = utils.get_info(line:sub(col, col))
-    if curr_info then
+    local curr_pair = utils.get_pair(line:sub(col, col))
+    if curr_pair then
         local prev = {
             pos = col,
             char = line:sub(col, col),
-            events = "curr",
         }
 
         local md = {
@@ -48,7 +48,7 @@ function tab.out(lines, pos, opts)
             pos = col + 1,
         }
 
-        return log.debug(md)
+        return log.debug(md, "curr pair")
     end
 end
 
