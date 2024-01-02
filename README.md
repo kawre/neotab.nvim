@@ -201,15 +201,13 @@ To help you find the location that overrides the [tabkey](#tabkey) you can use
 {
     "L3MON4D3/LuaSnip",
     build = "make install_jsregexp",
-    dependencies = {
-        "neotab.nvim",
-    },
+    dependencies = { "neotab.nvim", },
     keys = {
         {
             "<Tab>",
             function()
-                return require("luasnip").expand_or_jumpable()
-                    and "<Plug>luasnip-expand-or-jump"
+                return require("luasnip").jumpable(1) --
+                        and "<Plug>luasnip-jump-next"
                     or "<Plug>(neotab-out)"
             end,
             expr = true,
@@ -236,8 +234,8 @@ local neotab = require("neotab")
 ["<Tab>"] = cmp.mapping(function()
     if cmp.visible() then
         cmp.select_next_item()
-    elseif luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
+    elseif luasnip.jumpable(1) then
+        luasnip.jump(1)
     else
         neotab.tabout()
     end
