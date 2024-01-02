@@ -9,7 +9,7 @@ local config = {
 ---@class ntab.user.config
 config.defaults = {
     tabkey = "<Tab>",
-    act_as_tab = true, -- defaults to tab if tabout action is not available
+    act_as_tab = true,
     behavior = "nested", ---@type ntab.behavior
     pairs = { ---@type ntab.pair[]
         { open = "(", close = ")" },

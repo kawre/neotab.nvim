@@ -44,6 +44,8 @@ and consistent method for tabbing out of pairs.
 
 ## 🛠️ Configuration
 
+To see full configuration types check [types.lua](./lua/neotab/types.lua)
+
 ### ⚙️ default configuration
 
 ```lua
@@ -143,6 +145,8 @@ escape = {
                 { open = '"', close = '"' },
             },
             space = { before = true, after = true },
+            -- string.format(format, typed_char)
+            format = " %s ", -- " + "
             ft = { "java" },
         },
         [","] = {
@@ -150,7 +154,16 @@ escape = {
                 { open = "'", close = "'" },
                 { open = '"', close = '"' },
             },
-            space = { after = true },
+            format = "%s ", -- ", "
+        },
+        ["="] = {
+            pairs = {
+                { open = "(", close = ")" },
+            },
+            ft = { "javascript", "typescript" },
+            format = " %s> ", -- ` => `
+            -- string.match(text_between_pairs, cond)
+            cond = "^$", -- match only pairs with empty content
         },
     },
 },

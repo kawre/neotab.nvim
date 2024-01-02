@@ -66,25 +66,21 @@ function punctuators.escape(punc, trigger)
         return
     end
 
-    local offset = 1
-    if trigger.space then
-        if trigger.space.before then
-            offset = offset + 1
-            punc = " " .. punc
-        end
-        if trigger.space.after then
-            offset = offset + 1
-            punc = punc .. " "
-        end
-    end
-
+    punc = (trigger.format or "%s"):format(punc)
     local line = vim.api.nvim_get_current_line()
-    local after_punc = line:sub(pos[2] + 2, pos[2] + 1 + offset)
+
+    local after_punc = line:sub(pos[2] + 2, pos[2] + 1 + punc:len())
     if after_punc:find(vim.trim(punc), 1, true) then
         return
     end
 
-    if not utils.find_opening(info, line, pos[2]) then
+    local oi = utils.find_opening(info, line, pos[2])
+    if not oi then
+        return
+    end
+
+    local cond = trigger.cond
+    if cond and not line:sub(oi + 1, pos[2]):match(cond) then
         return
     end
 

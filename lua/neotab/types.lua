@@ -15,5 +15,6 @@
 
 ---@class ntab.trigger
 ---@field pairs ntab.pair[]
----@field space? { before?: boolean, after?: boolean }
+---@field format? string
+---@field cond? string
 ---@field ft? string[]
