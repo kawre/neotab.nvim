@@ -1,6 +1,20 @@
 local tab = require("neotab.tab")
 local assert = require("luassert")
 
+local mock = function(prev, next, pos)
+    return {
+        prev = {
+            char = prev[1],
+            pos = prev[2],
+        },
+        next = {
+            char = next[1],
+            pos = next[2],
+        },
+        pos = pos,
+    }
+end
+
 describe("tabout", function()
     require("neotab").setup({
         behavior = "nested",
@@ -14,7 +28,30 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert.equals(md, nil)
+        assert.is_nil(md)
+    end)
+
+    it("should not tab at the end of the line", function()
+        local case = {
+            lines = {
+                "{  {   },      (  ), {}, (), <   >    }, {}",
+                "{  {   },      (  ), {}, (), <   >    }, {{",
+                "{  {   },      (  ), {}, (), <   >    }, {'",
+                '{  {   },      (  ), {}, (), <   >    }, {"',
+            },
+        }
+
+        local md1 = tab.out(case.lines, { 1, 43 })
+        assert.is_nil(md1)
+
+        local md2 = tab.out(case.lines, { 2, 43 })
+        assert.is_nil(md2)
+
+        local md3 = tab.out(case.lines, { 3, 43 })
+        assert.is_nil(md3)
+
+        local md4 = tab.out(case.lines, { 4, 43 })
+        assert.is_nil(md4)
     end)
 
     it("should simply tabout", function()
@@ -25,17 +62,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "(",
-                pos = 1,
-            },
-            next = {
-                char = ")",
-                pos = 2,
-            },
-            pos = 3,
-        }))
+        assert.are.same(md, mock({ "(", 1 }, { ")", 2 }, 3))
     end)
 
     it("should jump to the nested pair", function()
@@ -46,7 +73,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert.equals(md, nil)
+        assert.is_nil(md)
     end)
 
     it("should not tab at the beggining of the line", function()
@@ -57,7 +84,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert.equals(md, nil)
+        assert.is_nil(md)
     end)
 
     it("should jump to the closes pair when previous character is closing", function()
@@ -69,17 +96,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "}",
-                pos = 8,
-            },
-            next = {
-                char = "(",
-                pos = 16,
-            },
-            pos = 16,
-        }))
+        assert.are.same(md, mock({ "}", 8 }, { "(", 16 }, 16))
     end)
 
     it("should tabout when current character is a pair", function()
@@ -91,17 +108,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "}",
-                pos = 5,
-            },
-            next = {
-                char = "}",
-                pos = 5,
-            },
-            pos = 6,
-        }))
+        assert.are.same(md, mock({ "}", 5 }, { "}", 5 }, 6))
     end)
 
     it("should prioritize valid pairs first", function()
@@ -113,17 +120,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "(",
-                pos = 1,
-            },
-            next = {
-                char = ")",
-                pos = 9,
-            },
-            pos = 9,
-        }))
+        assert.are.same(md, mock({ "(", 1 }, { ")", 9 }, 9))
     end)
 
     it("should prioritize valid pairs first", function()
@@ -135,17 +132,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "(",
-                pos = 1,
-            },
-            next = {
-                char = ")",
-                pos = 9,
-            },
-            pos = 9,
-        }))
+        assert.are.same(md, mock({ "(", 1 }, { ")", 9 }, 9))
     end)
 
     it("should fallback to first pair when no closing pair has been found", function()
@@ -157,17 +144,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "[",
-                pos = 2,
-            },
-            next = {
-                char = "[",
-                pos = 6,
-            },
-            pos = 6,
-        }))
+        assert.are.same(md, mock({ "[", 2 }, { "[", 6 }, 6))
     end)
 
     it("should jump to the nested pair", function()
@@ -179,17 +156,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = '"',
-                pos = 1,
-            },
-            next = {
-                char = "[",
-                pos = 2,
-            },
-            pos = 3,
-        }))
+        assert.are.same(md, mock({ '"', 1 }, { "[", 2 }, 3))
     end)
 
     it("should jump to the next available pair", function()
@@ -201,17 +168,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "[",
-                pos = 6,
-            },
-            next = {
-                char = '"',
-                pos = 10,
-            },
-            pos = 10,
-        }))
+        assert.are.same(md, mock({ "[", 6 }, { '"', 10 }, 10))
     end)
 
     it("should jump to the valid pair", function()
@@ -223,17 +180,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "(",
-                pos = 1,
-            },
-            next = {
-                char = ")",
-                pos = 9,
-            },
-            pos = 9,
-        }))
+        assert.are.same(md, mock({ "(", 1 }, { ")", 9 }, 9))
     end)
 
     it("should jump to the valid pair", function()
@@ -245,17 +192,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "<",
-                pos = 5,
-            },
-            next = {
-                char = ">",
-                pos = 13,
-            },
-            pos = 13,
-        }))
+        assert.are.same(md, mock({ "<", 5 }, { ">", 13 }, 13))
     end)
 
     it("should jump to the valid pair", function()
@@ -267,17 +204,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            next = {
-                char = ")",
-                pos = 27,
-            },
-            pos = 27,
-            prev = {
-                char = "(",
-                pos = 5,
-            },
-        }))
+        assert.are.same(md, mock({ "(", 5 }, { ")", 27 }, 27))
     end)
 
     it("should jump out", function()
@@ -289,17 +216,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            next = {
-                char = ")",
-                pos = 21,
-            },
-            pos = 22,
-            prev = {
-                char = "(",
-                pos = 20,
-            },
-        }))
+        assert.are.same(md, mock({ "(", 20 }, { ")", 21 }, 22))
     end)
 
     it("should jump out", function()
@@ -311,17 +228,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            next = {
-                char = ")",
-                pos = 33,
-            },
-            pos = 33,
-            prev = {
-                char = "(",
-                pos = 22,
-            },
-        }))
+        assert.are.same(md, mock({ "(", 22 }, { ")", 33 }, 33))
     end)
 
     it("should jump out", function()
@@ -333,17 +240,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            next = {
-                char = ")",
-                pos = 33,
-            },
-            prev = {
-                char = ")",
-                pos = 33,
-            },
-            pos = 34,
-        }))
+        assert.are.same(md, mock({ ")", 33 }, { ")", 33 }, 34))
     end)
 
     it("should jump to the closing pair", function()
@@ -353,17 +250,7 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "'",
-                pos = 19,
-            },
-            next = {
-                char = "'",
-                pos = 23,
-            },
-            pos = 23,
-        }))
+        assert.are.same(md, mock({ "'", 19 }, { "'", 23 }, 23))
     end)
 
     it("should jump to the next pair", function()
@@ -375,16 +262,6 @@ describe("tabout", function()
         }
 
         local md = tab.out(case.lines, case.pos)
-        assert(vim.deep_equal(md, {
-            prev = {
-                char = "[",
-                pos = 1,
-            },
-            next = {
-                char = "[",
-                pos = 5,
-            },
-            pos = 5,
-        }))
+        assert.are.same(md, mock({ "[", 1 }, { "[", 5 }, 5))
     end)
 end)
