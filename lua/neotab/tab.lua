@@ -1,5 +1,6 @@
 local utils = require("neotab.utils")
 local log = require("neotab.logger")
+local config = require("neotab.config")
 
 ---@class ntab.tab
 local tab = {}
@@ -12,9 +13,12 @@ local tab = {}
 function tab.out(lines, pos, opts)
     opts = vim.tbl_extend("force", {
         ignore_beginning = false,
+        behavior = config.user.behavior,
     }, opts or {})
 
+    log.debug(opts, "tabout opts")
     log.debug(pos, "cursor pos")
+
     local line = lines[pos[1]]
 
     if not opts.ignore_beginning then
@@ -29,7 +33,7 @@ function tab.out(lines, pos, opts)
 
     local prev_pair = utils.get_pair(line:sub(col - 1, col - 1))
     if prev_pair then
-        local md = utils.find_next(prev_pair, line, col)
+        local md = utils.find_next(prev_pair, line, col, opts.behavior)
         if md then
             return log.debug(md, "prev pair")
         end

@@ -170,6 +170,28 @@ describe("tabout", function()
         }))
     end)
 
+    it("should jump to the next available pair", function()
+        local case = {
+            --               |
+            --                  |
+            lines = { '"[   [   "' },
+            pos = { 1, 6 },
+        }
+
+        local md = tab.out(case.lines, case.pos)
+        assert(vim.deep_equal(md, {
+            prev = {
+                char = "[",
+                pos = 6,
+            },
+            next = {
+                char = '"',
+                pos = 10,
+            },
+            pos = 10,
+        }))
+    end)
+
     it("should jump to the valid pair", function()
         local case = {
             --          |
@@ -299,6 +321,26 @@ describe("tabout", function()
                 pos = 33,
             },
             pos = 34,
+        }))
+    end)
+
+    it("should jump to the closing pair", function()
+        local case = {
+            lines = { "(   {   }, [   ], '   '   )" },
+            pos = { 1, 19 },
+        }
+
+        local md = tab.out(case.lines, case.pos)
+        assert(vim.deep_equal(md, {
+            prev = {
+                char = "'",
+                pos = 19,
+            },
+            next = {
+                char = "'",
+                pos = 23,
+            },
+            pos = 23,
         }))
     end)
 end)

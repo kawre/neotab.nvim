@@ -78,7 +78,6 @@ function utils.find_closing(info, line, col)
 end
 
 function utils.valid_pair(info, line, l, r)
-    -- log.debug(line:sub(l, r), "line sub")
     if info.open == info.close and line:sub(l, r):find(info.open, 1, true) then
         return true
     end
@@ -125,7 +124,6 @@ function utils.find_next_nested(info, line, col) --
         local l, r = col, (closing_idx or #line)
         local first
 
-        log.debug(line:sub(l, r))
         for i = l, r do
             char = line:sub(i, i)
             local char_info = utils.get_pair(char)
@@ -143,35 +141,36 @@ function utils.find_next_nested(info, line, col) --
     end
 end
 
----@param info ntab.pair
+---@param pair ntab.pair
 ---@param line string
 ---@param col integer
-function utils.find_next_closing(info, line, col) --
+function utils.find_next_closing(pair, line, col) --
     local open_char = line:sub(col - 1, col - 1)
 
     local i
-    if info.open == info.close then
-        i = line:find(info.close, col, true) --
-    elseif open_char ~= info.close then
-        i = utils.find_closing(info, line, col) --
-            or line:find(info.close, col, true)
+    if pair.open == pair.close then
+        i = line:find(pair.close, col, true) --
+    elseif open_char ~= pair.close then
+        i = utils.find_closing(pair, line, col) --
+            or line:find(pair.close, col, true)
     end
 
-    return i or utils.find_next_nested(info, line, col)
+    return i or utils.find_next_nested(pair, line, col)
 end
 
----@param info ntab.pair
+---@param pair ntab.pair
 ---@param line string
 ---@param col integer
+---@param behavior ntab.behavior
 ---
 ---@return ntab.md | nil
-function utils.find_next(info, line, col) --
+function utils.find_next(pair, line, col, behavior) --
     local i
 
-    if config.user.behavior == "closing" then
-        i = utils.find_next_closing(info, line, col)
+    if behavior == "closing" then
+        i = utils.find_next_closing(pair, line, col)
     else
-        i = utils.find_next_nested(info, line, col)
+        i = utils.find_next_nested(pair, line, col)
     end
 
     if i then

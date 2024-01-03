@@ -2,7 +2,9 @@
 
 ---@alias ntab.pair { open: string, close: string }
 
----@alias ntab.out.opts { ignore_beginning?: boolean }
+---@class ntab.out.opts
+---@field ignore_beginning? boolean
+---@field behavior? ntab.behavior
 
 ---@alias ntab.behavior
 ---| "nested"
