@@ -185,9 +185,9 @@ To help you find the location that overrides the [tabkey](#tabkey) you can use
 
 ### Plug API
 
-| Mode | plug                      | action              |
-| ---- | ------------------------- | ------------------- |
-| i    | `<Plug>(neotab-out)`      | tabout              |
+| Mode | plug                 | action |
+| ---- | -------------------- | ------ |
+| i    | `<Plug>(neotab-out)` | tabout |
 
 ## 🍴 Recipes
 

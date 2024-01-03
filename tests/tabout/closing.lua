@@ -94,6 +94,28 @@ describe("tabout", function()
         }))
     end)
 
+    it("should prioritize valid pairs first when closing is not available", function()
+        local case = {
+            --          |
+            --                 |
+            lines = { "(   <   )   >" },
+            pos = { 1, 1 },
+        }
+
+        local md = tab.out(case.lines, case.pos)
+        assert(vim.deep_equal(md, {
+            prev = {
+                char = "(",
+                pos = 1,
+            },
+            next = {
+                char = ")",
+                pos = 9,
+            },
+            pos = 9,
+        }))
+    end)
+
     it("should jump to closing pair first", function()
         local case = {
             --          |
@@ -333,6 +355,28 @@ describe("tabout", function()
                 pos = 23,
             },
             pos = 23,
+        }))
+    end)
+
+    it("should jump to the next pair", function()
+        local case = {
+            --          |
+            --             |
+            lines = { "[   [   " },
+            pos = { 1, 1 },
+        }
+
+        local md = tab.out(case.lines, case.pos)
+        assert(vim.deep_equal(md, {
+            prev = {
+                char = "[",
+                pos = 1,
+            },
+            next = {
+                char = "[",
+                pos = 5,
+            },
+            pos = 5,
         }))
     end)
 end)

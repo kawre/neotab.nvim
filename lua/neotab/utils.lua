@@ -130,7 +130,6 @@ function utils.find_next_nested(info, line, col) --
 
             if char_info and char == char_info.open then
                 first = first or i
-
                 if utils.valid_pair(char_info, line, i + 1, r) then
                     return i
                 end
