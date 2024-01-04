@@ -1,6 +1,9 @@
 local tab = require("neotab.tab")
 local assert = require("luassert")
 
+---@param prev table
+---@param next table
+---@param pos integer
 local mock = function(prev, next, pos)
     return {
         prev = {
@@ -15,7 +18,7 @@ local mock = function(prev, next, pos)
     }
 end
 
-describe("tabout", function()
+describe("tabout nested", function()
     require("neotab").setup({
         behavior = "nested",
     })
@@ -78,13 +81,33 @@ describe("tabout", function()
 
     it("should not tab at the beggining of the line", function()
         local case = {
-            --         |
-            lines = { "()" },
-            pos = { 1, 0 },
+            lines = {
+                "()",
+                ")",
+                "}",
+                "]",
+                "'",
+                '"',
+            },
         }
 
-        local md = tab.out(case.lines, case.pos)
-        assert.is_nil(md)
+        local md1 = tab.out(case.lines, { 1, 0 })
+        assert.is_nil(md1)
+
+        local md2 = tab.out(case.lines, { 2, 0 })
+        assert.is_nil(md2)
+
+        local md3 = tab.out(case.lines, { 3, 0 })
+        assert.is_nil(md3)
+
+        local md4 = tab.out(case.lines, { 4, 0 })
+        assert.is_nil(md4)
+
+        local md5 = tab.out(case.lines, { 5, 0 })
+        assert.is_nil(md5)
+
+        local md6 = tab.out(case.lines, { 6, 0 })
+        assert.is_nil(md6)
     end)
 
     it("should jump to the closes pair when previous character is closing", function()
