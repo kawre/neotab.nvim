@@ -10,20 +10,22 @@ local punctuators = {}
 function punctuators.semicolon() --
     local lines = api.nvim_buf_get_lines(0, 0, -1, false)
     local pos = api.nvim_win_get_cursor(0)
+    local line = lines[pos[1]]
 
     -- check if cursor is inside foor loop
-    local _, for_e = lines[pos[1]]:find("^%s*for%s*%(")
+    local _, for_e = line:find("^%s*for%s*%(")
     if for_e then
-        local s2 = lines[pos[1]]:find("%)", for_e + 1)
+        local info = utils.get_pair("(")
+        local s2 = utils.find_closing(info, line, for_e)
         if s2 and pos[2] + 1 <= s2 then
             return
         end
     end
 
     -- check if cursor is inside a block
-    local bracket = lines[pos[1]]:find("}", pos[2] + 1, true)
+    local bracket = line:find("}", pos[2] + 1, true)
     if bracket then
-        lines[pos[1]] = lines[pos[1]]:sub(0, bracket - 1)
+        line = line:sub(0, bracket - 1)
     end
 
     ---@return ntab.md?
@@ -34,7 +36,7 @@ function punctuators.semicolon() --
             return
         end
 
-        local between = lines[pos[1]]:sub(cursor, md.next.pos - 1)
+        local between = line:sub(cursor, md.next.pos - 1)
         if vim.trim(between) ~= "" then
             return
         end
@@ -45,7 +47,7 @@ function punctuators.semicolon() --
     local md = tabout_rec(pos[2] + 1)
 
     if md then
-        local after_tabout = lines[pos[1]]:sub(md.next.pos + 1)
+        local after_tabout = line:sub(md.next.pos + 1)
         if vim.trim(after_tabout) == "" then
             utils.set_cursor(md.next.pos + 1)
         end
