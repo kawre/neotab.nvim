@@ -14,6 +14,7 @@ function tab.out(lines, pos, opts)
     opts = vim.tbl_extend("force", {
         ignore_beginning = false,
         behavior = config.user.behavior,
+        skip_prev = false,
     }, opts or {})
 
     log.debug(opts, "tabout opts")
@@ -31,11 +32,13 @@ function tab.out(lines, pos, opts)
     -- convert from 0 to 1 based indexing
     local col = pos[2] + 1
 
-    local prev_pair = utils.get_pair(line:sub(col - 1, col - 1))
-    if prev_pair then
-        local md = utils.find_next(prev_pair, line, col, opts.behavior)
-        if md then
-            return log.debug(md, "prev pair")
+    if not opts.skip_prev then
+        local prev_pair = utils.get_pair(line:sub(col - 1, col - 1))
+        if prev_pair then
+            local md = utils.find_next(prev_pair, line, col, opts.behavior)
+            if md then
+                return log.debug(md, "prev pair")
+            end
         end
     end
 

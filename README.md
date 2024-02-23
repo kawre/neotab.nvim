@@ -144,7 +144,6 @@ escape = {
             pairs = {
                 { open = '"', close = '"' },
             },
-            space = { before = true, after = true },
             -- string.format(format, typed_char)
             format = " %s ", -- " + "
             ft = { "java" },
@@ -185,9 +184,10 @@ To help you find the location that overrides the [tabkey](#tabkey) you can use
 
 ### Plug API
 
-| Mode | plug                 | action |
-| ---- | -------------------- | ------ |
-| i    | `<Plug>(neotab-out)` | tabout |
+| Mode | plug                         | action                               |
+| ---- | ---------------------------- | ------------------------------------ |
+| i    | `<Plug>(neotab-out)`         | tabout                               |
+| i    | `<Plug>(neotab-out-luasnip)` | (experimental) tabout before luasnip |
 
 ## 🍴 Recipes
 
